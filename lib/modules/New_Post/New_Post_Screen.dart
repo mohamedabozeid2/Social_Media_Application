@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_application4/models/PostModel.dart';
+import 'package:social_application4/modules/Feeds/Feeds_Screen.dart';
+import 'package:social_application4/modules/Social_Layout/Social_Layout.dart';
 import 'package:social_application4/modules/Social_Layout/cubit/cubit.dart';
 import 'package:social_application4/modules/Social_Layout/cubit/states.dart';
 import 'package:social_application4/shared/components/components.dart';
@@ -17,6 +20,7 @@ class NewPostScreen extends StatelessWidget {
         if (state is SocialCreatePostSuccessState) {
           postController.text = "";
           SocialLayoutCubit.get(context).postImage = null;
+          navigateAndFinish(context: context, widget: SocialLayout());
         }
       },
       builder: (context, state) {
@@ -34,7 +38,7 @@ class NewPostScreen extends StatelessWidget {
                     SocialLayoutCubit.get(context).uploadPostImage(
                         dateTime: DateTime.now().toString(),
                         text: postController.text);
-                  }
+                  };
                 })
           ]),
           body: Padding(
@@ -49,10 +53,10 @@ class NewPostScreen extends StatelessWidget {
                   ),
                 Row(
                   children: [
-                    const CircleAvatar(
+                    CircleAvatar(
                       radius: 25.0,
                       backgroundImage: NetworkImage(
-                          "https://img.freepik.com/free-photo/positive-delighted-bearded-man-appealing-you-points-fingers-makes-good-choice-has-funny-joyful-expression-chooses-someone-shows-its-up-you-gesture-picks-potential-client_273609-42154.jpg?w=996"),
+                          "${userModel!.image}"),
                     ),
                     const SizedBox(
                       width: 15.0,
@@ -62,21 +66,21 @@ class NewPostScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
-                            children: const [
+                            children: [
                               Text(
-                                "Mohamed Abo Zeid",
-                                style: TextStyle(
+                                "${userModel!.name}",
+                                style: const TextStyle(
                                   height: 1.0,
                                   fontSize: 15.0,
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 5.0,
                               ),
                             ],
                           ),
                           Text(
-                            "March 24,2022 at 4:00 pm",
+                            "Public",
                             style: Theme.of(context).textTheme.caption,
                           )
                         ],

@@ -43,15 +43,23 @@ class SocialUserCoverUpdateLoadingState extends SocialLayoutStates{}
 //create post
 
 class SocialCreatePostLoadingState extends SocialLayoutStates{}
-
 class SocialCreatePostSuccessState extends SocialLayoutStates{}
-
 class SocialCreatePostErrorState extends SocialLayoutStates{}
 
 class SocialPostImagePickedSuccessState extends SocialLayoutStates{}
-
-class SocialPostImagePickedErrorState extends SocialLayoutStates{
-
-}
+class SocialPostImagePickedErrorState extends SocialLayoutStates{}
 class SocialRemovePostImageState extends SocialLayoutStates{}
+
+
+class SocialLayoutGetPostDataLoadingState extends SocialLayoutStates{}
+class SocialLayoutGetPostDataSuccessState extends SocialLayoutStates{}
+class SocialLayoutGetPostDataErrorState extends SocialLayoutStates{
+  final String error;
+
+  SocialLayoutGetPostDataErrorState(this.error);
+}
+
+class SocialLikePostLoadingState extends SocialLayoutStates{}
+class SocialLikePostSuccessState extends SocialLayoutStates{}
+class SocialLikePostErrorState extends SocialLayoutStates{}
 

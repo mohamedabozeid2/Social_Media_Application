@@ -107,7 +107,7 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
     required String name,
     required String phone,
     required String bio,
-}) {
+  }) {
     emit(SocialUserImageUpdateLoadingState());
     firebase_storage.FirebaseStorage.instance
         .ref()
@@ -117,7 +117,7 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
       print("Profile image uploaded successfully");
       value.ref.getDownloadURL().then((value) {
         // profileImageUrl = value;
-        updateUser(name: name, phone: phone, bio: bio,image: value);
+        updateUser(name: name, phone: phone, bio: bio, image: value);
         profileImage = null;
         emit(SocialUploadProfileImageSuccessState());
         print(value);
@@ -135,7 +135,7 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
     required String name,
     required String phone,
     required String bio,
-}) {
+  }) {
     emit(SocialUserCoverUpdateLoadingState());
     firebase_storage.FirebaseStorage.instance
         .ref()
@@ -165,7 +165,7 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
     String? cover,
     String? image,
   }) {
-    if(cover ==null && image == null){
+    if (cover == null && image == null) {
       emit(SocialUserUpdateLoadingState());
     }
     SocialUserModel model = SocialUserModel(
@@ -174,8 +174,8 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
       bio: bio,
       email: userModel!.email,
       uId: userModel!.uId,
-      cover: cover??userModel!.cover,
-      image: image??userModel!.image,
+      cover: cover ?? userModel!.cover,
+      image: image ?? userModel!.image,
       isEmailVerified: false,
     );
     FirebaseFirestore.instance
@@ -190,7 +190,6 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
     });
   }
 
-
   File? postImage;
 
   Future<void> getPostImage() async {
@@ -204,8 +203,6 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
       emit(SocialPostImagePickedErrorState());
     }
   }
-
-
 
   void uploadPostImage({
     required String dateTime,
@@ -243,23 +240,60 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
       image: userModel!.image,
       text: text,
       dateTime: dateTime,
-      postImage: postImage??"",
+      postImage: postImage ?? "",
     );
     emit(SocialCreatePostLoadingState());
     FirebaseFirestore.instance
         .collection('posts')
         .add(model.toMap())
         .then((value) {
-
-          emit(SocialCreatePostSuccessState());
+      getPosts();
+      emit(SocialCreatePostSuccessState());
     }).catchError((error) {
       print("Error while update user data ===> ${error.toString()}");
       emit(SocialCreatePostErrorState());
     });
   }
 
-  void removePostImage(){
+  void removePostImage() {
     postImage = null;
     emit(SocialRemovePostImageState());
+  }
+
+  List<PostModel> posts = [];
+  List<String> postsId = [];
+  List<int> likes = [];
+
+  void getPosts() {
+    FirebaseFirestore.instance.collection('posts').get().then((value) {
+      value.docs.forEach((element) {
+        element.reference
+            .collection('likes')
+            .get()
+            .then((value) {
+              likes.add(value.docs.length);
+              postsId.add(element.id);
+              posts.add(PostModel.fromJson(element.data()));
+              emit(SocialLayoutGetPostDataSuccessState());
+        })
+            .catchError((error) {
+        });
+      });
+    }).catchError((error) {
+      emit(SocialLayoutGetPostDataErrorState(error.toString()));
+    });
+  }
+
+  void likePost(String postId) {
+    FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .collection('likes')
+        .doc(userModel!.uId)
+        .set({'like': true}).then((value) {
+      emit(SocialLikePostSuccessState());
+    }).catchError((error) {
+      emit(SocialLikePostErrorState());
+    });
   }
 }

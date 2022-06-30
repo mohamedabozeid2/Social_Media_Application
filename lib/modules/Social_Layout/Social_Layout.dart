@@ -6,15 +6,13 @@ import 'package:social_application4/modules/New_Post/New_Post_Screen.dart';
 import 'package:social_application4/modules/Social_Layout/cubit/cubit.dart';
 import 'package:social_application4/modules/Social_Layout/cubit/states.dart';
 import 'package:social_application4/shared/components/components.dart';
-import 'package:social_application4/shared/constants/constants.dart';
-import 'package:social_application4/shared/network/local/cache_helper.dart';
 import 'package:social_application4/styles/icons_broken.dart';
 
 class SocialLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => SocialLayoutCubit()..getUserData(),
+      create: (BuildContext context) => SocialLayoutCubit()..getUserData()..getPosts(),
       child: BlocConsumer<SocialLayoutCubit, SocialLayoutStates>(
         listener: (context, state) {
           if(state is SocialNewPostState){
