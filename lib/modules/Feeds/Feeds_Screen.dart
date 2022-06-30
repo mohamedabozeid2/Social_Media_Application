@@ -63,7 +63,7 @@ class FeedsScreen extends StatelessWidget {
                   const CircleAvatar(
                     radius: 25.0,
                     backgroundImage: NetworkImage(
-                    "https://scontent.fcai19-5.fna.fbcdn.net/v/t1.6435-9/132042006_2766054416944062_7836130104951523797_n.jpg?_nc_cat=107&ccb=1-6&_nc_sid=09cbfe&_nc_ohc=GA1RZhQQI1oAX_Z_kGP&_nc_ht=scontent.fcai19-5.fna&oh=00_AT9E97ChkKF1SYx5mkaapyIAAwwsEjBwCqEV9aZr5BRzPQ&oe=629E5722"),
+                    "https://img.freepik.com/free-photo/positive-delighted-bearded-man-appealing-you-points-fingers-makes-good-choice-has-funny-joyful-expression-chooses-someone-shows-its-up-you-gesture-picks-potential-client_273609-42154.jpg?w=996"),
                   ),
                   const SizedBox(
                     width: 15.0,

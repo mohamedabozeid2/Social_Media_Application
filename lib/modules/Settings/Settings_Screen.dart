@@ -16,7 +16,7 @@ class SettingsScreen extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         // var userModel = SocialLayoutCubit.get(context).userModel;
-        print("userModel==> $userModel");
+        print("userModel==> ${userModel!.uId}");
         return ConditionalBuilder(
             condition: userModel != null,
             builder: (context) => Padding(

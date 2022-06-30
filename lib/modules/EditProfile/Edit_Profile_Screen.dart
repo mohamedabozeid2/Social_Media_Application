@@ -34,15 +34,11 @@ class EditProfileScreen extends StatelessWidget {
     return BlocConsumer<SocialLayoutCubit, SocialLayoutStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        print("Edit page here =====><======");
-        // print(SocialLayoutCubit.get(context).userModel);
-        // var userModel = SocialLayoutCubit.get(context).userModel;
         var profileImage = SocialLayoutCubit.get(context).profileImage;
         var coverImage = SocialLayoutCubit.get(context).coverImage;
         nameController.text = userModel!.name!;
         bioController.text = userModel!.bio!;
         phoneController.text = userModel!.phone!;
-        // print(userModel!.cover);
         return Scaffold(
             appBar: defaultAppBar(
                 context: context,

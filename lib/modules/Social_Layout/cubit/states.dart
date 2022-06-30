@@ -39,3 +39,19 @@ class SocialUserUpdateLoadingState extends SocialLayoutStates{}
 class SocialUserImageUpdateLoadingState extends SocialLayoutStates{}
 
 class SocialUserCoverUpdateLoadingState extends SocialLayoutStates{}
+
+//create post
+
+class SocialCreatePostLoadingState extends SocialLayoutStates{}
+
+class SocialCreatePostSuccessState extends SocialLayoutStates{}
+
+class SocialCreatePostErrorState extends SocialLayoutStates{}
+
+class SocialPostImagePickedSuccessState extends SocialLayoutStates{}
+
+class SocialPostImagePickedErrorState extends SocialLayoutStates{
+
+}
+class SocialRemovePostImageState extends SocialLayoutStates{}
+
