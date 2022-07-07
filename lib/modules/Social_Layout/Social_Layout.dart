@@ -27,7 +27,9 @@ class SocialLayout extends StatelessWidget {
                 cubit.titles[cubit.currentIndex]
               ),
               actions: [
-                IconButton(onPressed: (){}, icon: Icon(IconBroken.Notification)),
+                IconButton(onPressed: (){
+                  print("${SocialLayoutCubit.get(context).colorIcons}");
+                }, icon: Icon(IconBroken.Notification)),
                 IconButton(onPressed: (){}, icon: Icon(IconBroken.Search)),
 
               ],

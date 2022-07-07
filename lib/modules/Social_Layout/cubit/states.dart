@@ -63,3 +63,13 @@ class SocialLikePostLoadingState extends SocialLayoutStates{}
 class SocialLikePostSuccessState extends SocialLayoutStates{}
 class SocialLikePostErrorState extends SocialLayoutStates{}
 
+
+class SocialDisLikePostLoadingState extends SocialLayoutStates{}
+class SocialDisLikePostSuccessState extends SocialLayoutStates{}
+class SocialDisLikePostErrorState extends SocialLayoutStates{}
+
+class SocialGetLikeLoadingState extends SocialLayoutStates{}
+class SocialGetLikeSuccessState extends SocialLayoutStates{}
+class SocialGetLikeErrorState extends SocialLayoutStates{}
+
+

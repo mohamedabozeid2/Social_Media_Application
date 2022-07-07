@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_application4/models/PostModel.dart';
+import 'package:social_application4/modules/Feeds/LikeButton.dart';
 import 'package:social_application4/modules/Social_Layout/cubit/cubit.dart';
 import 'package:social_application4/modules/Social_Layout/cubit/states.dart';
 import 'package:social_application4/shared/constants/constants.dart';
@@ -12,11 +14,10 @@ class FeedsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SocialLayoutCubit, SocialLayoutStates>(
-      listener: (context, state){},
+      listener: (context, state) {},
       builder: (context, state) {
-        return ConditionalBuilder(
-          condition: SocialLayoutCubit.get(context).posts.isNotEmpty && userModel != null,
-          builder: (context){return SingleChildScrollView(
+        if(SocialLayoutCubit.get(context).posts.isNotEmpty && userModel != null && SocialLayoutCubit.get(context).colorIcons.isNotEmpty){
+          return SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: Column(
               children: [
@@ -50,21 +51,77 @@ class FeedsScreen extends StatelessWidget {
                 ListView.separated(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) => buildPostItem(SocialLayoutCubit.get(context).posts[index], context, index),
+                    itemBuilder: (context, index) => buildPostItem(
+                        SocialLayoutCubit.get(context).posts[index],
+                        context,
+                        index),
                     separatorBuilder: (context, index) => const SizedBox(
                       height: 5,
                     ),
                     itemCount: SocialLayoutCubit.get(context).posts.length)
               ],
             ),
-          );},
-          fallback: (context) => Center(child: const CircularProgressIndicator()),
-        );
+          );/*ConditionalBuilder(
+          condition: SocialLayoutCubit.get(context).posts.isNotEmpty &&
+              userModel != null && SocialLayoutCubit.get(context).colorIcons != null,
+          builder: (context) {
+            return SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                children: [
+                  Card(
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      elevation: 10.0,
+                      child: Stack(
+                        alignment: AlignmentDirectional.centerStart,
+                        children: const [
+                          Image(
+                              height: 200.0,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                              image: NetworkImage(
+                                "https://img.freepik.com/free-photo/horizontal-shot-happy-adult-man-points-index-finger-away-shows-advertisement-against-yellow-studio-background-wears-round-spectacles-casual-t-shirt-demonstrates-promo-look-this-please_273609-59011.jpg?w=1060",
+                              )),
+                          Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text(
+                              "Communicate \n with friends",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontFamily: "Jannah",
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          )
+                        ],
+                      )),
+                  ListView.separated(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) => buildPostItem(
+                          SocialLayoutCubit.get(context).posts[index],
+                          context,
+                          index),
+                      separatorBuilder: (context, index) => const SizedBox(
+                            height: 5,
+                          ),
+                      itemCount: SocialLayoutCubit.get(context).posts.length)
+                ],
+              ),
+            );
+          },
+          fallback: (context) =>
+              Center(child: const CircularProgressIndicator()),
+        )*/
+        }else{
+          return const Center(child: CircularProgressIndicator());
+        }
       },
     );
   }
 
-  Widget buildPostItem(PostModel model ,BuildContext context, index) {
+  Widget buildPostItem(PostModel model, BuildContext context, index) {
     return Card(
         clipBehavior: Clip.antiAliasWithSaveLayer,
         elevation: 5.0,
@@ -76,8 +133,7 @@ class FeedsScreen extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 25.0,
-                    backgroundImage: NetworkImage(
-                        "${model.image}"),
+                    backgroundImage: NetworkImage("${model.image}"),
                   ),
                   const SizedBox(
                     width: 15.0,
@@ -212,7 +268,7 @@ class FeedsScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              if(model.postImage != "")
+              if (model.postImage != "")
                 Padding(
                   padding: const EdgeInsets.only(top: 15.0),
                   child: Container(
@@ -222,13 +278,23 @@ class FeedsScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(5.0),
                         image: DecorationImage(
                             fit: BoxFit.cover,
-                            image: NetworkImage(
-                                "${model.postImage}"))),
+                            image: NetworkImage("${model.postImage}"))),
                   ),
                 ),
               Row(
                 children: [
-                  Expanded(
+                  LikeButton(
+                    index: index,
+                    // postId: SocialLayoutCubit.get(context).postsId[index],
+                      likesNumber: SocialLayoutCubit.get(context).likes[index],
+                      fun: () {
+                        SocialLayoutCubit.get(context).checkLike(index);
+                      },
+                      colorIcons: SocialLayoutCubit.get(context).colorIcons,
+                      // likeUserId: SocialLayoutCubit.get(context).likeUserId,
+
+                  ),
+                  /*Expanded(
                     child: InkWell(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -250,10 +316,11 @@ class FeedsScreen extends StatelessWidget {
                         ),
                       ),
                       onTap: () {
-                        SocialLayoutCubit.get(context).likePost(SocialLayoutCubit.get(context).postsId[index]);
+                        SocialLayoutCubit.get(context).checkLike(index);
                       },
                     ),
-                  ),
+                  ),*/
+
                   Expanded(
                     child: InkWell(
                       child: Padding(
@@ -294,8 +361,8 @@ class FeedsScreen extends StatelessWidget {
                         InkWell(
                           child: CircleAvatar(
                             radius: 18.0,
-                            backgroundImage: NetworkImage(
-                                "${userModel!.image}"),
+                            backgroundImage:
+                                NetworkImage("${userModel!.image}"),
                           ),
                           onTap: () {},
                         ),
@@ -343,7 +410,9 @@ class FeedsScreen extends StatelessWidget {
                             ),
                           ),
                           onTap: () {
-                            SocialLayoutCubit.get(context).likePost(SocialLayoutCubit.get(context).postsId[index]);
+                            print(SocialLayoutCubit.get(context).colorIcons);
+                            // SocialLayoutCubit.get(context).getLike(SocialLayoutCubit.get(context).postsId[index]);
+                            // SocialLayoutCubit.get(context).finalGetLikes();
                           },
                         ),
                         const SizedBox(

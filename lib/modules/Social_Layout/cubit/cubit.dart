@@ -1,8 +1,7 @@
 import 'dart:io';
 
-import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:social_application4/models/PostModel.dart';
@@ -263,28 +262,134 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
   List<PostModel> posts = [];
   List<String> postsId = [];
   List<int> likes = [];
+  List<Map<String, String>> userLikes = [];
 
   void getPosts() {
-    FirebaseFirestore.instance.collection('posts').get().then((value) {
-      value.docs.forEach((element) {
-        element.reference
-            .collection('likes')
-            .get()
-            .then((value) {
-              likes.add(value.docs.length);
-              postsId.add(element.id);
-              posts.add(PostModel.fromJson(element.data()));
-              emit(SocialLayoutGetPostDataSuccessState());
-        })
-            .catchError((error) {
-        });
+    FirebaseFirestore.instance
+        .collection('posts')
+        .orderBy('dateTime')
+        .get()
+        .then((gotPosts) {
+      gotPosts.docs.forEach((postDocs) {
+        postDocs.reference.collection('likes').get().then((likeDocs) {
+          getLike(postDocs.id);
+          likes.add(likeDocs.docs.length);
+          // print("-----$likes");
+          postsId.add(postDocs.id);
+          posts.add(PostModel.fromJson(postDocs.data()));
+          // print(userLikes);
+          emit(SocialLayoutGetPostDataSuccessState());
+        }).catchError((error) {});
       });
     }).catchError((error) {
       emit(SocialLayoutGetPostDataErrorState(error.toString()));
     });
   }
 
-  void likePost(String postId) {
+
+  List<String> colorIcons = [];
+
+  void getLike(String postId){
+    emit(SocialGetLikeLoadingState());
+    FirebaseFirestore.instance.collection('posts').doc(postId).collection('likes').doc(userModel!.uId).get().then((value){
+      if(value.data() != null){
+        colorIcons.add('red');
+      }else{
+        colorIcons.add('grey');
+      }
+      emit(SocialGetLikeSuccessState());
+
+    }).catchError((error){
+      print(error.toString());
+      emit(SocialGetLikeErrorState());
+    });
+  }
+
+  // void finalGetLikes() {
+  //   for (int i = 0; i < posts.length; i++) {
+  //     FirebaseFirestore.instance
+  //         .collection('posts')
+  //         .doc(postsId[i])
+  //         .collection('likes')
+  //         .get()
+  //         .then((value) {
+  //       for (var element in value.docs) {
+  //         if (element.id == userModel!.uId) {
+  //           colorIcons.add('red');
+  //           break;
+  //         } else {
+  //           // colorIcons.add('grey');
+  //         }
+  //       }
+  //     });
+  //   }
+  //   print(colorIcons);
+  // }
+
+
+  //
+  // void getLikes(index) {
+  //   FirebaseFirestore.instance
+  //       .collection('posts')
+  //       .doc(postsId[index])
+  //       .collection('likes')
+  //       .get()
+  //       .then((value) {
+  //     print("HEREEE");
+  //     for (var element in value.docs) {
+  //       if (userModel!.uId == element.id) {
+  //         likeUserId.add(element.id);
+  //         print("YES");
+  //         break;
+  //       } else {
+  //         print("NO");
+  //       }
+  //     }
+  //   }).catchError((error) {
+  //     print(error);
+  //   });
+  // }
+  //
+  // void getAllLikes() {
+  //   FirebaseFirestore.instance.collection('posts').get().then((value) {
+  //     value.docs.forEach((element) {
+  //       element.reference.collection('likes').get().then((value) {
+  //         value.docs.forEach((element) {
+  //           print(element.id);
+  //         });
+  //         // for(int i=0; i<posts.length; i++){
+  //         //   if(posts[1].uId == )
+  //         // }
+  //       });
+  //     });
+  //   });
+  // }
+
+  // void getAllLikes(){
+  //   FirebaseFirestore.instance.collection('posts').get().then((value){
+  //     value.docs.forEach((element) {
+  //       element.reference.collection('likes').get().then((value){
+  //         // print("${postsId} ==== ${value.docs.length}");
+  //         value.docs.forEach((element){
+  //           print("element.id ${element.id}");
+  //         });
+  //       });
+  //     });
+  //   });
+  // }
+
+  // void getLikes2(index) {
+  //   FirebaseFirestore.instance.collection('posts').doc(postsId[index])
+  //       .collection('likes').get()
+  //       .then((value) {
+  //     value.docs.forEach((element) {
+  //       likeUserId.add(element.id);
+  //       print(element.id);
+  //     });
+  //   });
+  // }
+
+  void likePost(String postId, index) {
     FirebaseFirestore.instance
         .collection('posts')
         .doc(postId)
@@ -294,6 +399,44 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
       emit(SocialLikePostSuccessState());
     }).catchError((error) {
       emit(SocialLikePostErrorState());
+    });
+  }
+
+  void disLikePost(String postId, index) {
+    FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .collection('likes')
+        .doc(userModel!.uId)
+        .delete()
+        .then((value) {
+      emit(SocialDisLikePostSuccessState());
+    }).catchError((error) {
+      print(error.toString());
+      emit(SocialDisLikePostErrorState());
+    });
+  }
+
+  void checkLike(int index) {
+    FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postsId[index])
+        .collection('likes')
+        .doc(userModel!.uId)
+        .get()
+        .then((value) {
+      if (value.data() == null) {
+        likes[index]++;
+        print('ADD');
+        print(likes[index]);
+        likePost(postsId[index], index);
+      } else {
+        likes[index]--;
+        print('remove add');
+        print(likes[index]);
+        disLikePost(postsId[index], index);
+      }
+      // getLikes(index);
     });
   }
 }
