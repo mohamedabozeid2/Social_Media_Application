@@ -61,59 +61,7 @@ class FeedsScreen extends StatelessWidget {
                     itemCount: SocialLayoutCubit.get(context).posts.length)
               ],
             ),
-          );/*ConditionalBuilder(
-          condition: SocialLayoutCubit.get(context).posts.isNotEmpty &&
-              userModel != null && SocialLayoutCubit.get(context).colorIcons != null,
-          builder: (context) {
-            return SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                children: [
-                  Card(
-                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                      elevation: 10.0,
-                      child: Stack(
-                        alignment: AlignmentDirectional.centerStart,
-                        children: const [
-                          Image(
-                              height: 200.0,
-                              width: double.infinity,
-                              fit: BoxFit.cover,
-                              image: NetworkImage(
-                                "https://img.freepik.com/free-photo/horizontal-shot-happy-adult-man-points-index-finger-away-shows-advertisement-against-yellow-studio-background-wears-round-spectacles-casual-t-shirt-demonstrates-promo-look-this-please_273609-59011.jpg?w=1060",
-                              )),
-                          Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text(
-                              "Communicate \n with friends",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontFamily: "Jannah",
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          )
-                        ],
-                      )),
-                  ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) => buildPostItem(
-                          SocialLayoutCubit.get(context).posts[index],
-                          context,
-                          index),
-                      separatorBuilder: (context, index) => const SizedBox(
-                            height: 5,
-                          ),
-                      itemCount: SocialLayoutCubit.get(context).posts.length)
-                ],
-              ),
-            );
-          },
-          fallback: (context) =>
-              Center(child: const CircularProgressIndicator()),
-        )*/
+          );
         }else{
           return const Center(child: CircularProgressIndicator());
         }

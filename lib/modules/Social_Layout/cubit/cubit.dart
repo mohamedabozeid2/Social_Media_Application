@@ -274,10 +274,8 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
         postDocs.reference.collection('likes').get().then((likeDocs) {
           getLike(postDocs.id);
           likes.add(likeDocs.docs.length);
-          // print("-----$likes");
           postsId.add(postDocs.id);
           posts.add(PostModel.fromJson(postDocs.data()));
-          // print(userLikes);
           emit(SocialLayoutGetPostDataSuccessState());
         }).catchError((error) {});
       });
@@ -286,108 +284,28 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
     });
   }
 
-
   List<String> colorIcons = [];
 
-  void getLike(String postId){
+  void getLike(String postId) {
     emit(SocialGetLikeLoadingState());
-    FirebaseFirestore.instance.collection('posts').doc(postId).collection('likes').doc(userModel!.uId).get().then((value){
-      if(value.data() != null){
+    FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .collection('likes')
+        .doc(userModel!.uId)
+        .get()
+        .then((value) {
+      if (value.data() != null) {
         colorIcons.add('red');
-      }else{
+      } else {
         colorIcons.add('grey');
       }
       emit(SocialGetLikeSuccessState());
-
-    }).catchError((error){
+    }).catchError((error) {
       print(error.toString());
       emit(SocialGetLikeErrorState());
     });
   }
-
-  // void finalGetLikes() {
-  //   for (int i = 0; i < posts.length; i++) {
-  //     FirebaseFirestore.instance
-  //         .collection('posts')
-  //         .doc(postsId[i])
-  //         .collection('likes')
-  //         .get()
-  //         .then((value) {
-  //       for (var element in value.docs) {
-  //         if (element.id == userModel!.uId) {
-  //           colorIcons.add('red');
-  //           break;
-  //         } else {
-  //           // colorIcons.add('grey');
-  //         }
-  //       }
-  //     });
-  //   }
-  //   print(colorIcons);
-  // }
-
-
-  //
-  // void getLikes(index) {
-  //   FirebaseFirestore.instance
-  //       .collection('posts')
-  //       .doc(postsId[index])
-  //       .collection('likes')
-  //       .get()
-  //       .then((value) {
-  //     print("HEREEE");
-  //     for (var element in value.docs) {
-  //       if (userModel!.uId == element.id) {
-  //         likeUserId.add(element.id);
-  //         print("YES");
-  //         break;
-  //       } else {
-  //         print("NO");
-  //       }
-  //     }
-  //   }).catchError((error) {
-  //     print(error);
-  //   });
-  // }
-  //
-  // void getAllLikes() {
-  //   FirebaseFirestore.instance.collection('posts').get().then((value) {
-  //     value.docs.forEach((element) {
-  //       element.reference.collection('likes').get().then((value) {
-  //         value.docs.forEach((element) {
-  //           print(element.id);
-  //         });
-  //         // for(int i=0; i<posts.length; i++){
-  //         //   if(posts[1].uId == )
-  //         // }
-  //       });
-  //     });
-  //   });
-  // }
-
-  // void getAllLikes(){
-  //   FirebaseFirestore.instance.collection('posts').get().then((value){
-  //     value.docs.forEach((element) {
-  //       element.reference.collection('likes').get().then((value){
-  //         // print("${postsId} ==== ${value.docs.length}");
-  //         value.docs.forEach((element){
-  //           print("element.id ${element.id}");
-  //         });
-  //       });
-  //     });
-  //   });
-  // }
-
-  // void getLikes2(index) {
-  //   FirebaseFirestore.instance.collection('posts').doc(postsId[index])
-  //       .collection('likes').get()
-  //       .then((value) {
-  //     value.docs.forEach((element) {
-  //       likeUserId.add(element.id);
-  //       print(element.id);
-  //     });
-  //   });
-  // }
 
   void likePost(String postId, index) {
     FirebaseFirestore.instance
@@ -396,6 +314,9 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
         .collection('likes')
         .doc(userModel!.uId)
         .set({'like': true}).then((value) {
+      likes[index]++;
+      colorIcons[index] = "red";
+      print(colorIcons);
       emit(SocialLikePostSuccessState());
     }).catchError((error) {
       emit(SocialLikePostErrorState());
@@ -410,6 +331,9 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
         .doc(userModel!.uId)
         .delete()
         .then((value) {
+      likes[index]--;
+      colorIcons[index] = 'grey';
+      print(colorIcons);
       emit(SocialDisLikePostSuccessState());
     }).catchError((error) {
       print(error.toString());
@@ -426,12 +350,10 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
         .get()
         .then((value) {
       if (value.data() == null) {
-        likes[index]++;
         print('ADD');
         print(likes[index]);
         likePost(postsId[index], index);
       } else {
-        likes[index]--;
         print('remove add');
         print(likes[index]);
         disLikePost(postsId[index], index);

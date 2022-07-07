@@ -25,34 +25,29 @@ class LikeButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return BlocConsumer<SocialLayoutCubit, SocialLayoutStates>(
-      listener: (context, state) {},
-      builder: (context, state){
-        return Expanded(
-          child: InkWell(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: Row(
-                  children: [
-                    Icon(
-                      IconBroken.Heart,
-                      size: 20,
-                      color: colorIcons[index] == "red"? Colors.red: Colors.grey,
-                    ),
-                    const SizedBox(
-                      width: 5.0,
-                    ),
-                    Text(
-                      "$likesNumber",
-                      style: Theme.of(context).textTheme.caption,
-                    )
-                  ],
+    return Expanded(
+      child: InkWell(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            child: Row(
+              children: [
+                Icon(
+                  IconBroken.Heart,
+                  size: 20,
+                  color: colorIcons[index] == "red"? Colors.red: Colors.grey,
                 ),
-              ),
-              onTap: fun
+                const SizedBox(
+                  width: 5.0,
+                ),
+                Text(
+                  "$likesNumber",
+                  style: Theme.of(context).textTheme.caption,
+                )
+              ],
+            ),
           ),
-        );
-      },
+          onTap: fun
+      ),
     );
   }
 }

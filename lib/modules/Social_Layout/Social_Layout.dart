@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,7 @@ class SocialLayout extends StatelessWidget {
               ),
               actions: [
                 IconButton(onPressed: (){
-                  print("${SocialLayoutCubit.get(context).colorIcons}");
+                  print(Timestamp.now());
                 }, icon: Icon(IconBroken.Notification)),
                 IconButton(onPressed: (){}, icon: Icon(IconBroken.Search)),
 
