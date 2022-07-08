@@ -3,9 +3,11 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_application4/models/PostModel.dart';
+import 'package:social_application4/modules/Feeds/CommentTextField.dart';
 import 'package:social_application4/modules/Feeds/LikeButton.dart';
 import 'package:social_application4/modules/Social_Layout/cubit/cubit.dart';
 import 'package:social_application4/modules/Social_Layout/cubit/states.dart';
+import 'package:social_application4/shared/components/components.dart';
 import 'package:social_application4/shared/constants/constants.dart';
 import 'package:social_application4/styles/icons_broken.dart';
 import 'package:social_application4/styles/themes.dart';
@@ -16,7 +18,9 @@ class FeedsScreen extends StatelessWidget {
     return BlocConsumer<SocialLayoutCubit, SocialLayoutStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        if(SocialLayoutCubit.get(context).posts.isNotEmpty && userModel != null && SocialLayoutCubit.get(context).colorIcons.isNotEmpty){
+        if (SocialLayoutCubit.get(context).posts.isNotEmpty &&
+            userModel != null &&
+            SocialLayoutCubit.get(context).colorIcons.isNotEmpty) {
           return SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: Column(
@@ -56,13 +60,13 @@ class FeedsScreen extends StatelessWidget {
                         context,
                         index),
                     separatorBuilder: (context, index) => const SizedBox(
-                      height: 5,
-                    ),
+                          height: 5,
+                        ),
                     itemCount: SocialLayoutCubit.get(context).posts.length)
               ],
             ),
           );
-        }else{
+        } else {
           return const Center(child: CircularProgressIndicator());
         }
       },
@@ -70,6 +74,7 @@ class FeedsScreen extends StatelessWidget {
   }
 
   Widget buildPostItem(PostModel model, BuildContext context, index) {
+    var commentController = TextEditingController();
     return Card(
         clipBehavior: Clip.antiAliasWithSaveLayer,
         elevation: 5.0,
@@ -234,41 +239,13 @@ class FeedsScreen extends StatelessWidget {
                   LikeButton(
                     index: index,
                     // postId: SocialLayoutCubit.get(context).postsId[index],
-                      likesNumber: SocialLayoutCubit.get(context).likes[index],
-                      fun: () {
-                        SocialLayoutCubit.get(context).checkLike(index);
-                      },
-                      colorIcons: SocialLayoutCubit.get(context).colorIcons,
-                      // likeUserId: SocialLayoutCubit.get(context).likeUserId,
-
+                    likesNumber: SocialLayoutCubit.get(context).likes[index],
+                    fun: () {
+                      SocialLayoutCubit.get(context).checkLike(index);
+                    },
+                    colorIcons: SocialLayoutCubit.get(context).colorIcons,
+                    // likeUserId: SocialLayoutCubit.get(context).likeUserId,
                   ),
-                  /*Expanded(
-                    child: InkWell(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: Row(
-                          children: [
-                            const Icon(
-                              IconBroken.Heart,
-                              size: 20,
-                              color: Colors.red,
-                            ),
-                            const SizedBox(
-                              width: 5.0,
-                            ),
-                            Text(
-                              "${SocialLayoutCubit.get(context).likes[index]}",
-                              style: Theme.of(context).textTheme.caption,
-                            )
-                          ],
-                        ),
-                      ),
-                      onTap: () {
-                        SocialLayoutCubit.get(context).checkLike(index);
-                      },
-                    ),
-                  ),*/
-
                   Expanded(
                     child: InkWell(
                       child: Padding(
@@ -285,7 +262,7 @@ class FeedsScreen extends StatelessWidget {
                               width: 5.0,
                             ),
                             Text(
-                              "0 comments",
+                              "${commentNumber[index]} comments",
                               style: Theme.of(context).textTheme.caption,
                             )
                           ],
@@ -317,24 +294,15 @@ class FeedsScreen extends StatelessWidget {
                         const SizedBox(
                           width: 15.0,
                         ),
-                        Expanded(
-                          child: InkWell(
-                            child: Text(
-                              "write a comment ....",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .caption!
-                                  .copyWith(height: 3.5),
-                            ),
-                            onTap: () {},
-                          ),
-                        )
+
+                        CommentTextField(controller: commentController,),
+
                       ],
                     ),
-                    flex: 10,
+                    flex: 8,
                   ),
                   Expanded(
-                    flex: 4,
+                    flex: 5,
                     child: Row(
                       children: [
                         InkWell(
@@ -343,7 +311,7 @@ class FeedsScreen extends StatelessWidget {
                             child: Row(
                               children: [
                                 const Icon(
-                                  IconBroken.Heart,
+                                  IconBroken.Chat,
                                   size: 20,
                                   color: Colors.red,
                                 ),
@@ -351,16 +319,15 @@ class FeedsScreen extends StatelessWidget {
                                   width: 5.0,
                                 ),
                                 Text(
-                                  "Like",
+                                  "Comment",
                                   style: Theme.of(context).textTheme.caption,
                                 )
                               ],
                             ),
                           ),
                           onTap: () {
-                            print(SocialLayoutCubit.get(context).colorIcons);
-                            // SocialLayoutCubit.get(context).getLike(SocialLayoutCubit.get(context).postsId[index]);
-                            // SocialLayoutCubit.get(context).finalGetLikes();
+                            SocialLayoutCubit.get(context).addComment(commentController.text, index);
+                            print(commentController.text);
                           },
                         ),
                         const SizedBox(
@@ -386,7 +353,9 @@ class FeedsScreen extends StatelessWidget {
                               ],
                             ),
                           ),
-                          onTap: () {},
+                          onTap: () {
+                            print(commentNumber.length);
+                          },
                         ),
                       ],
                     ),

@@ -70,7 +70,7 @@ class SocialLoginScreen extends StatelessWidget {
                         textFormField(
                           type: TextInputType.emailAddress,
                           controller: emailController,
-                          lable: "Email Address",
+                          label: "Email Address",
                           validation: "Please Enter Your Email Address",
                           prefixIcon: Icons.email_outlined,
                         ),
@@ -81,7 +81,7 @@ class SocialLoginScreen extends StatelessWidget {
                             type: TextInputType.visiblePassword,
                             controller: passwordController,
                             validation: "Please Enter Your Password",
-                            lable: "Password",
+                            label: "Password",
                             prefixIcon: Icons.lock,
                             fun: () {
                               SocialLoginCubit.get(context).changeVisibility();

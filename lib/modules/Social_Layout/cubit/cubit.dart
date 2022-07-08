@@ -1,9 +1,11 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:social_application4/models/CommentModel.dart';
 import 'package:social_application4/models/PostModel.dart';
 import 'package:social_application4/models/Social_User_Model.dart';
 import 'package:social_application4/modules/Chats/Chats_Screen.dart';
@@ -307,6 +309,27 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
     });
   }
 
+  void checkLike(int index) {
+    FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postsId[index])
+        .collection('likes')
+        .doc(userModel!.uId)
+        .get()
+        .then((value) {
+      if (value.data() == null) {
+        print('ADD');
+        print(likes[index]);
+        likePost(postsId[index], index);
+      } else {
+        print('remove add');
+        print(likes[index]);
+        disLikePost(postsId[index], index);
+      }
+      // getLikes(index);
+    });
+  }
+
   void likePost(String postId, index) {
     FirebaseFirestore.instance
         .collection('posts')
@@ -341,24 +364,62 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
     });
   }
 
-  void checkLike(int index) {
+  void addComment(text, index) {
+    emit(SocialAddCommentLoadingState());
+    CommentModel commentModel = CommentModel(text, userModel!.image,
+        userModel!.uId, userModel!.name, DateTime.now());
     FirebaseFirestore.instance
         .collection('posts')
         .doc(postsId[index])
-        .collection('likes')
-        .doc(userModel!.uId)
-        .get()
+        .collection('comments')
+        .add(commentModel.toMap())
         .then((value) {
-      if (value.data() == null) {
-        print('ADD');
-        print(likes[index]);
-        likePost(postsId[index], index);
-      } else {
-        print('remove add');
-        print(likes[index]);
-        disLikePost(postsId[index], index);
-      }
-      // getLikes(index);
+      print(value.id);
+      emit(SocialAddCommentSuccessState());
+    }).catchError((error) {
+      print(error.toString());
+      emit(SocialAddCommentErrorState());
     });
+  }
+
+  int? commentsLength;
+
+  void getComments() {
+    print("STARTTTTt");
+    emit(SocialGetCommentsLoadingState());
+    FirebaseFirestore.instance
+        .collection('posts')
+        .orderBy('dateTime')
+        .get().then((value){
+          value.docs.forEach((element) {
+            print("POSTS ${element.id}");
+            element.reference.collection('comments').get().then((value){
+                commentNumber.add(value.docs.length);
+            });
+            // element.reference.collection('comments').get().then((value){
+            //   for(int i=0;i<value.docs.length ; i++){
+            //     commentNumber[i]++;
+            //   }
+            //   value.docs.forEach((element) {
+            //     commentNumber.add(element.id);
+            //   });
+            // });
+            emit(SocialGetCommentsSuccessState());
+          });
+
+          print("DONEEEEe");
+    }).catchError((error){
+      print(error.toString());
+      emit(SocialGetCommentsErrorState());
+    });
+    //     .doc(postsId[index])
+    //     .collection('comments')
+    //     .get()
+    //     .then((value) {
+    //       value.docs.forEach((element) {
+    //         print(element.id);
+    //       });
+    //   // commentsLength = value.docs.length;
+    // }
   }
 }

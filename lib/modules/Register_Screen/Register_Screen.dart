@@ -72,7 +72,7 @@ class SocialRegisterScreen extends StatelessWidget {
                         ),
                         textFormField(
                           controller: nameController,
-                          lable: "User Name",
+                          label: "User Name",
                           type: TextInputType.name,
                           prefixIcon: Icons.person,
                           validation: "Name Must Not Be Empty",
@@ -88,7 +88,7 @@ class SocialRegisterScreen extends StatelessWidget {
                         ),
                         textFormField(
                           controller: passwordController,
-                          lable: "Password",
+                          label: "Password",
                           type: TextInputType.visiblePassword,
                           prefixIcon: Icons.lock,
                           isPassword: SocialRegisterCubit.get(context).isPassword,
@@ -104,7 +104,7 @@ class SocialRegisterScreen extends StatelessWidget {
                         ),
                         textFormField(
                           controller: phoneController,
-                          lable: "Phone Number",
+                          label: "Phone Number",
                           type: TextInputType.phone,
                           prefixIcon: Icons.phone,
                           validation: "Phone Must Not Be Empty",

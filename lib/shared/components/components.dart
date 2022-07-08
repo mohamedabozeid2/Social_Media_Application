@@ -81,12 +81,15 @@ Widget emailFormField(context, emailController) {
 
 
 Widget textFormField({
+  BuildContext? context,
   required TextEditingController controller,
   bool isPassword = false,
   String validation = "",
-  required String lable,
+  required String label,
   required TextInputType type,
-  required IconData prefixIcon,
+  TextStyle? style,
+  IconData? prefixIcon,
+  double? paddingInside,
   IconData? suffixIcon,
   void Function()? fun,
   double borderRadius = 5.0,
@@ -103,20 +106,25 @@ Widget textFormField({
     },
     decoration: InputDecoration(
         label: Text(
-          lable,
+          label,
+          style: style,
         ),
         prefixIcon: Icon(prefixIcon),
         suffixIcon: IconButton(
           onPressed:  fun,
           icon: Icon(suffixIcon==null?suffixIcon = null: suffixIcon = suffixIcon),
         ),
+        contentPadding: paddingInside != null ? EdgeInsets.symmetric(vertical: paddingInside) : null,
         border: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Theme.of(context!).scaffoldBackgroundColor
+          ),
           borderRadius: BorderRadius.circular(borderRadius),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(borderRadius),
-          borderSide: const BorderSide(
-            color: Colors.blue,
+          borderSide:  BorderSide(
+            color: Theme.of(context).scaffoldBackgroundColor,
           ),
         ),
         errorBorder: OutlineInputBorder(
@@ -127,7 +135,7 @@ Widget textFormField({
         ),
         enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(borderRadius),
-            borderSide: const BorderSide(color: Colors.black))),
+            borderSide: BorderSide(color: Theme.of(context).scaffoldBackgroundColor))),
   );
 }
 

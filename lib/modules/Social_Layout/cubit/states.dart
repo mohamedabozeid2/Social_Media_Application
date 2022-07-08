@@ -72,4 +72,12 @@ class SocialGetLikeLoadingState extends SocialLayoutStates{}
 class SocialGetLikeSuccessState extends SocialLayoutStates{}
 class SocialGetLikeErrorState extends SocialLayoutStates{}
 
+class SocialAddCommentLoadingState extends SocialLayoutStates{}
+class SocialAddCommentSuccessState extends SocialLayoutStates{}
+class SocialAddCommentErrorState extends SocialLayoutStates{}
+
+class SocialGetCommentsLoadingState extends SocialLayoutStates{}
+class SocialGetCommentsSuccessState extends SocialLayoutStates{}
+class SocialGetCommentsErrorState extends SocialLayoutStates{}
+
 

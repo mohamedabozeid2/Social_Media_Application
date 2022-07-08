@@ -221,7 +221,7 @@ class EditProfileScreen extends StatelessWidget {
                             ),
                             textFormField(
                                 controller: nameController,
-                                lable: "Name",
+                                label: "Name",
                                 type: TextInputType.name,
                                 prefixIcon: IconBroken.User,
                                 validation: "Name must not be empty"),
@@ -230,7 +230,7 @@ class EditProfileScreen extends StatelessWidget {
                             ),
                             textFormField(
                                 controller: phoneController,
-                                lable: "Phone",
+                                label: "Phone",
                                 type: TextInputType.phone,
                                 prefixIcon: IconBroken.Call,
                                 validation: "Phone must not be empty"),
@@ -239,7 +239,7 @@ class EditProfileScreen extends StatelessWidget {
                             ),
                             textFormField(
                               controller: bioController,
-                              lable: "Bio",
+                              label: "Bio",
                               type: TextInputType.text,
                               prefixIcon: IconBroken.Info_Circle,
                             )
