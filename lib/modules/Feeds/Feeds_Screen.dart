@@ -3,6 +3,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_application4/models/PostModel.dart';
+import 'package:social_application4/modules/Feeds/CommentItem.dart';
 import 'package:social_application4/modules/Feeds/CommentTextField.dart';
 import 'package:social_application4/modules/Feeds/LikeButton.dart';
 import 'package:social_application4/modules/Social_Layout/cubit/cubit.dart';
@@ -18,9 +19,12 @@ class FeedsScreen extends StatelessWidget {
     return BlocConsumer<SocialLayoutCubit, SocialLayoutStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        if (SocialLayoutCubit.get(context).posts.isNotEmpty &&
-            userModel != null &&
-            SocialLayoutCubit.get(context).colorIcons.isNotEmpty) {
+        if (SocialLayoutCubit.get(context).posts.isEmpty ||
+            userModel == null ||
+            SocialLayoutCubit.get(context).colorIcons.isEmpty ||
+            SocialLayoutCubit.get(context).likes.isEmpty) {
+          return const Center(child: CircularProgressIndicator());
+        } else {
           return SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: Column(
@@ -66,8 +70,6 @@ class FeedsScreen extends StatelessWidget {
               ],
             ),
           );
-        } else {
-          return const Center(child: CircularProgressIndicator());
         }
       },
     );
@@ -262,13 +264,54 @@ class FeedsScreen extends StatelessWidget {
                               width: 5.0,
                             ),
                             Text(
-                              "${commentNumber[index]} comments",
+                              "${SocialLayoutCubit.get(context).comments[index].length} comments",
                               style: Theme.of(context).textTheme.caption,
                             )
                           ],
                         ),
                       ),
-                      onTap: () {},
+                      onTap: () {
+                        scaffoldKey.currentState!.showBottomSheet((context) {
+                          return Container(
+                            decoration:
+                                BoxDecoration(color: Colors.blueGrey[100]),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: ListView.separated(
+                                    itemBuilder: (context, insideIndex) {
+                                      return commentItem(
+                                        name: SocialLayoutCubit.get(context)
+                                            .comments[index][insideIndex]
+                                            .name!,
+                                        profileImage:
+                                            SocialLayoutCubit.get(context)
+                                                .comments[index][insideIndex]
+                                                .profileImage!,
+                                        comment: SocialLayoutCubit.get(context)
+                                            .comments[index][insideIndex]
+                                            .comment!,
+                                        date: SocialLayoutCubit.get(context)
+                                            .comments[index][insideIndex]
+                                            .date!,
+                                        context: context
+                                      );
+                                    },
+                                    separatorBuilder: (context, index) {
+                                      return myDivider(color: Colors.white);
+                                    },
+                                    itemCount: SocialLayoutCubit.get(context)
+                                        .comments[index]
+                                        .length,
+                                    physics: BouncingScrollPhysics(),
+                                  ),
+                                )
+                              ],
+                            ),
+                          );
+                        });
+                      },
                     ),
                   ),
                 ],
@@ -294,9 +337,9 @@ class FeedsScreen extends StatelessWidget {
                         const SizedBox(
                           width: 15.0,
                         ),
-
-                        CommentTextField(controller: commentController,),
-
+                        CommentTextField(
+                          controller: commentController,
+                        ),
                       ],
                     ),
                     flex: 8,
@@ -326,7 +369,8 @@ class FeedsScreen extends StatelessWidget {
                             ),
                           ),
                           onTap: () {
-                            SocialLayoutCubit.get(context).addComment(commentController.text, index);
+                            SocialLayoutCubit.get(context)
+                                .addComment(commentController.text, index);
                             print(commentController.text);
                           },
                         ),
@@ -365,5 +409,68 @@ class FeedsScreen extends StatelessWidget {
             ],
           ),
         ));
+  }
+
+  Widget commentItem({
+    required String profileImage,
+    required String name,
+    required String date,
+    required String comment,
+    required BuildContext context,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.all(15.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.blueGrey[200],
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  CircleAvatar(
+                    radius: 22.0,
+                    backgroundImage: NetworkImage(profileImage),
+                  ),
+                  const SizedBox(
+                    width: 15.0,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        name,
+                        style: const TextStyle(fontSize: 16.0),
+                      ),
+                      Text(comment,
+                          style: Theme.of(context)
+                              .textTheme
+                              .caption!
+                              .copyWith(fontSize: 14)),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+          Row(
+            children: [
+              const SizedBox(
+                width: 20,
+              ),
+              Text(
+                date,
+                style: Theme.of(context).textTheme.caption,
+              ),
+            ],
+          )
+        ],
+      ),
+    );
   }
 }

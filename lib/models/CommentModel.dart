@@ -2,7 +2,7 @@ class CommentModel {
   String? comment;
   String? profileImage;
   String? userId;
-  DateTime? date;
+  String? date;
   String? name;
 
   CommentModel(this.comment, this.profileImage, this.userId, this.name, this.date);

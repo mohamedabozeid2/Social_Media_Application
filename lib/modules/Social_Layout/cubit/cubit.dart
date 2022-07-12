@@ -264,12 +264,14 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
   List<PostModel> posts = [];
   List<String> postsId = [];
   List<int> likes = [];
-  List<Map<String, String>> userLikes = [];
 
   void getPosts() {
     FirebaseFirestore.instance
         .collection('posts')
-        .orderBy('dateTime')
+        .orderBy(
+          'dateTime',
+          descending: true,
+        )
         .get()
         .then((gotPosts) {
       gotPosts.docs.forEach((postDocs) {
@@ -278,6 +280,7 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
           likes.add(likeDocs.docs.length);
           postsId.add(postDocs.id);
           posts.add(PostModel.fromJson(postDocs.data()));
+          posts.sort((a, b) => a.dateTime!.compareTo(b.dateTime!));
           emit(SocialLayoutGetPostDataSuccessState());
         }).catchError((error) {});
       });
@@ -367,7 +370,7 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
   void addComment(text, index) {
     emit(SocialAddCommentLoadingState());
     CommentModel commentModel = CommentModel(text, userModel!.image,
-        userModel!.uId, userModel!.name, DateTime.now());
+        userModel!.uId, userModel!.name, DateTime.now().toString());
     FirebaseFirestore.instance
         .collection('posts')
         .doc(postsId[index])
@@ -375,51 +378,87 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
         .add(commentModel.toMap())
         .then((value) {
       print(value.id);
-      emit(SocialAddCommentSuccessState());
+      getAllComment();
+
     }).catchError((error) {
       print(error.toString());
       emit(SocialAddCommentErrorState());
     });
   }
 
-  int? commentsLength;
+  List<String>? commentId;
+  List<List<CommentModel>> comments = [];
 
-  void getComments() {
-    print("STARTTTTt");
+  void getAllComment() {
     emit(SocialGetCommentsLoadingState());
-    FirebaseFirestore.instance
-        .collection('posts')
-        .orderBy('dateTime')
-        .get().then((value){
+    List<CommentModel> singleComment = [];
+    FirebaseFirestore.instance.collection('posts').get().then((value) {
+      value.docs.forEach((element) {
+        element.reference.collection('comments').get().then((value) {
           value.docs.forEach((element) {
-            print("POSTS ${element.id}");
-            element.reference.collection('comments').get().then((value){
-                commentNumber.add(value.docs.length);
-            });
-            // element.reference.collection('comments').get().then((value){
-            //   for(int i=0;i<value.docs.length ; i++){
-            //     commentNumber[i]++;
-            //   }
-            //   value.docs.forEach((element) {
-            //     commentNumber.add(element.id);
-            //   });
-            // });
-            emit(SocialGetCommentsSuccessState());
+            singleComment.add(CommentModel.fromJson(element.data()));
           });
-
-          print("DONEEEEe");
-    }).catchError((error){
+          comments.add(singleComment);
+          singleComment = [];
+        });
+      });
+      emit(SocialGetCommentsSuccessState());
+    }).catchError((error) {
       print(error.toString());
       emit(SocialGetCommentsErrorState());
     });
-    //     .doc(postsId[index])
-    //     .collection('comments')
-    //     .get()
-    //     .then((value) {
-    //       value.docs.forEach((element) {
-    //         print(element.id);
-    //       });
-    //   // commentsLength = value.docs.length;
-    // }
   }
+
+//   void getComments({
+//   required String postId,
+// }) {
+//     comments = [];
+//     commentId = [];
+//     emit(SocialGetCommentsLoadingState());
+//     FirebaseFirestore.instance
+//     .collection('posts')
+//     .doc(postId)
+//     .collection('comments')
+//     .orderBy('date', descending: true)
+//     .get()
+//     .then((value){
+//       for(int i=0; i<value.docs.length; i++){
+//         print('start');
+//         // List<CommentModel> singleComment = [];
+//         // singleComment.add(CommentModel.fromJson(value.docs[i].data()));
+//         print(value.docs[i].data());
+//         // commentId!.add(value.docs[i].id);
+//         // comments.add(CommentModel.fromJson(value.docs[i].data()));
+//         print("INSIDE");
+//       }
+//       print("OUTSIDE");
+//       emit(SocialGetCommentsSuccessState());
+//     }).catchError((error){
+//       print(error.toString());
+//       emit(SocialGetCommentsErrorState());
+//     });
+//     ////////
+//     // FirebaseFirestore.instance
+//     //     .collection('posts').get().then((value) {
+//     //   value.docs.forEach((element) {
+//     //     element.reference.collection('comments').get().then((value) {
+//     //       commentNumber.add(value.docs.length);
+//     //     });
+//     //     emit(SocialGetCommentsSuccessState());
+//     //   });
+//     // }).catchError((error) {
+//     //   print(error.toString());
+//     //   emit(SocialGetCommentsErrorState());
+//     // });
+//     ////////////////
+//     //     .doc(postsId[index])
+//     //     .collection('comments')
+//     //     .get()
+//     //     .then((value) {
+//     //       value.docs.forEach((element) {
+//     //         print(element.id);
+//     //       });
+//     //   // commentsLength = value.docs.length;
+//     // }
+//   }
 }
