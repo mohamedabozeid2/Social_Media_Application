@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
       create: (BuildContext context) => SocialLayoutCubit()..getUserData(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
+        title: 'Social',
         theme: lightTheme,
         darkTheme: darkTheme,
         themeMode: ThemeMode.light,

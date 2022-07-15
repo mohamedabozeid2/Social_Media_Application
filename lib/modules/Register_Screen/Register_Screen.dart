@@ -71,6 +71,7 @@ class SocialRegisterScreen extends StatelessWidget {
                           height: 30.0,
                         ),
                         textFormField(
+                          context: context,
                           controller: nameController,
                           label: "User Name",
                           type: TextInputType.name,
@@ -87,6 +88,7 @@ class SocialRegisterScreen extends StatelessWidget {
                           height: 15.0,
                         ),
                         textFormField(
+                          context: context,
                           controller: passwordController,
                           label: "Password",
                           type: TextInputType.visiblePassword,
@@ -103,6 +105,7 @@ class SocialRegisterScreen extends StatelessWidget {
                           height: 15.0,
                         ),
                         textFormField(
+                          context: context,
                           controller: phoneController,
                           label: "Phone Number",
                           type: TextInputType.phone,

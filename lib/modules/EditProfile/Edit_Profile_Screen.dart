@@ -50,7 +50,9 @@ class EditProfileScreen extends StatelessWidget {
                         SocialLayoutCubit.get(context).updateUser(
                             name: nameController.text,
                             phone: phoneController.text,
-                            bio: bioController.text);
+                            bio: bioController.text,
+                            context: context
+                        );
                       },
                       weight: FontWeight.bold)
                 ]),
@@ -175,7 +177,9 @@ class EditProfileScreen extends StatelessWidget {
                                                   .uploadProfileImage(
                                                       name: nameController.text,
                                                       phone: phoneController.text,
-                                                      bio: bioController.text);
+                                                      bio: bioController.text,
+                                                      context: context
+                                              );
                                             },
                                             text: "Upload Profile",
                                             height: 45.0,
@@ -202,7 +206,9 @@ class EditProfileScreen extends StatelessWidget {
                                                   .uploadCoverImage(
                                                   name: nameController.text,
                                                   phone: phoneController.text,
-                                                  bio: bioController.text);
+                                                  bio: bioController.text,
+                                                  context: context
+                                              );
                                             },
                                             text: "Upload Cover",
                                             height: 45.0,
@@ -224,7 +230,9 @@ class EditProfileScreen extends StatelessWidget {
                                 label: "Name",
                                 type: TextInputType.name,
                                 prefixIcon: IconBroken.User,
-                                validation: "Name must not be empty"),
+                                validation: "Name must not be empty",
+                                context: context
+                            ),
                             const SizedBox(
                               height: 10.0,
                             ),
@@ -233,7 +241,9 @@ class EditProfileScreen extends StatelessWidget {
                                 label: "Phone",
                                 type: TextInputType.phone,
                                 prefixIcon: IconBroken.Call,
-                                validation: "Phone must not be empty"),
+                                validation: "Phone must not be empty",
+                                context: context
+                            ),
                             const SizedBox(
                               height: 10.0,
                             ),
@@ -242,6 +252,7 @@ class EditProfileScreen extends StatelessWidget {
                               label: "Bio",
                               type: TextInputType.text,
                               prefixIcon: IconBroken.Info_Circle,
+                              context: context
                             )
                           ],
                         ),

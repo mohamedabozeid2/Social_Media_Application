@@ -1,6 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_application4/modules/New_Post/New_Post_Screen.dart';
@@ -17,7 +15,7 @@ class SocialLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => SocialLayoutCubit()..getUserData()..getPosts()..getAllComment(),
+      create: (BuildContext context) => SocialLayoutCubit()..getAllComment(false)..getUserData()..getPosts(),
       child: BlocConsumer<SocialLayoutCubit, SocialLayoutStates>(
         listener: (context, state) {
           if(state is SocialNewPostState){
@@ -27,15 +25,12 @@ class SocialLayout extends StatelessWidget {
         builder: (context, state) {
           var cubit = SocialLayoutCubit.get(context);
           return Scaffold(
-            key: scaffoldKey,
             appBar: AppBar(
               title: Text(
                 cubit.titles[cubit.currentIndex]
               ),
               actions: [
-                IconButton(onPressed: (){
-                  print(SocialLayoutCubit.get(context).comments[1][1].comment);
-                }, icon: Icon(IconBroken.Notification)),
+                IconButton(onPressed: (){}, icon: Icon(IconBroken.Notification)),
                 IconButton(onPressed: (){}, icon: Icon(IconBroken.Search)),
 
               ],

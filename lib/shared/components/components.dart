@@ -81,7 +81,7 @@ Widget emailFormField(context, emailController) {
 
 
 Widget textFormField({
-  BuildContext? context,
+  required BuildContext? context,
   required TextEditingController controller,
   bool isPassword = false,
   String validation = "",

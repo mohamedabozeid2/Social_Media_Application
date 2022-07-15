@@ -73,6 +73,7 @@ class SocialLoginScreen extends StatelessWidget {
                           label: "Email Address",
                           validation: "Please Enter Your Email Address",
                           prefixIcon: Icons.email_outlined,
+                          context: context
                         ),
                         const SizedBox(
                           height: 15.0,
@@ -88,7 +89,9 @@ class SocialLoginScreen extends StatelessWidget {
                             },
                             isPassword:
                                 SocialLoginCubit.get(context).isPassword,
-                            suffixIcon: SocialLoginCubit.get(context).icon),
+                            suffixIcon: SocialLoginCubit.get(context).icon,
+                            context: context
+                        ),
                         const SizedBox(
                           height: 15,
                         ),

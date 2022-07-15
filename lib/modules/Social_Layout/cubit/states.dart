@@ -3,9 +3,7 @@ class SocialLayoutStates{}
 class SocialLayoutInitialState extends SocialLayoutStates{}
 
 class SocialLayoutGetUserDataLoadingState extends SocialLayoutStates{}
-
 class SocialLayoutGetUserDataSuccessState extends SocialLayoutStates{}
-
 class SocialLayoutGetUserDataErrorState extends SocialLayoutStates{}
 
 class SocialLayoutSignOutState extends SocialLayoutStates{}
@@ -17,27 +15,21 @@ class SocialNewPostState extends SocialLayoutStates{}
 class SocialNavigationState extends SocialLayoutStates{}
 
 class SocialProfileImagePickedSuccessState extends SocialLayoutStates{}
-
 class SocialProfileImagePickedErrorState extends SocialLayoutStates{}
 
 class SocialUploadProfileImageSuccessState extends SocialLayoutStates{}
-
 class SocialUploadProfileImageErrorState extends SocialLayoutStates{}
 
 class SocialCoverImagePickedSuccessState extends SocialLayoutStates{}
-
 class SocialCoverImagePickedErrorState extends SocialLayoutStates{}
 
 class SocialUploadCoverImageSuccessState extends SocialLayoutStates{}
-
 class SocialUploadCoverImageErrorState extends SocialLayoutStates{}
 
 class SocialUserUpdateErrorState extends SocialLayoutStates{}
-
 class SocialUserUpdateLoadingState extends SocialLayoutStates{}
 
 class SocialUserImageUpdateLoadingState extends SocialLayoutStates{}
-
 class SocialUserCoverUpdateLoadingState extends SocialLayoutStates{}
 
 //create post
@@ -79,5 +71,17 @@ class SocialAddCommentErrorState extends SocialLayoutStates{}
 class SocialGetCommentsLoadingState extends SocialLayoutStates{}
 class SocialGetCommentsSuccessState extends SocialLayoutStates{}
 class SocialGetCommentsErrorState extends SocialLayoutStates{}
+
+
+// Chat States
+class SocialGetAllUserDataLoadingState extends SocialLayoutStates{}
+class SocialGetAllUserDataSuccessState extends SocialLayoutStates{}
+class SocialGetAllUserDataErrorState extends SocialLayoutStates{}
+
+// Send And Get Messages
+class SocialSendMessagesSuccessState extends SocialLayoutStates{}
+class SocialSendMessagesErrorState extends SocialLayoutStates{}
+class SocialGetMessagesLoadingState extends SocialLayoutStates{}
+class SocialGetMessagesSuccessState extends SocialLayoutStates{}
 
 

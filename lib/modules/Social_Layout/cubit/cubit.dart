@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:social_application4/models/CommentModel.dart';
+import 'package:social_application4/models/MessageModel.dart';
 import 'package:social_application4/models/PostModel.dart';
 import 'package:social_application4/models/Social_User_Model.dart';
 import 'package:social_application4/modules/Chats/Chats_Screen.dart';
@@ -13,6 +13,7 @@ import 'package:social_application4/modules/EditProfile/Edit_Profile_Screen.dart
 import 'package:social_application4/modules/Feeds/Feeds_Screen.dart';
 import 'package:social_application4/modules/New_Post/New_Post_Screen.dart';
 import 'package:social_application4/modules/Settings/Settings_Screen.dart';
+import 'package:social_application4/modules/Social_Layout/Social_Layout.dart';
 import 'package:social_application4/modules/Social_Layout/cubit/states.dart';
 import 'package:social_application4/modules/Users/UsersScreen.dart';
 import 'package:social_application4/modules/login_screen/login_screen.dart';
@@ -108,6 +109,7 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
     required String name,
     required String phone,
     required String bio,
+    required BuildContext context,
   }) {
     emit(SocialUserImageUpdateLoadingState());
     firebase_storage.FirebaseStorage.instance
@@ -118,7 +120,8 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
       print("Profile image uploaded successfully");
       value.ref.getDownloadURL().then((value) {
         // profileImageUrl = value;
-        updateUser(name: name, phone: phone, bio: bio, image: value);
+        updateUser(
+            name: name, phone: phone, bio: bio, image: value, context: context);
         profileImage = null;
         emit(SocialUploadProfileImageSuccessState());
         print(value);
@@ -132,11 +135,11 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
   }
 
   // String coverImageUrl = '';
-  void uploadCoverImage({
-    required String name,
-    required String phone,
-    required String bio,
-  }) {
+  void uploadCoverImage(
+      {required String name,
+      required String phone,
+      required String bio,
+      required BuildContext context}) {
     emit(SocialUserCoverUpdateLoadingState());
     firebase_storage.FirebaseStorage.instance
         .ref()
@@ -146,7 +149,8 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
       print("Cover image uploaded successfully");
       value.ref.getDownloadURL().then((value) {
         // coverImageUrl = value;
-        updateUser(name: name, phone: phone, bio: bio, cover: value);
+        updateUser(
+            name: name, phone: phone, bio: bio, cover: value, context: context);
         coverImage = null;
         emit(SocialUploadCoverImageSuccessState());
         print(value);
@@ -163,6 +167,7 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
     required String name,
     required String phone,
     required String bio,
+    required BuildContext context,
     String? cover,
     String? image,
   }) {
@@ -185,6 +190,7 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
         .update(model.toMap())
         .then((value) {
       getUserData();
+      navigateAndFinish(context: context, widget: SocialLayout());
     }).catchError((error) {
       print("Error while update user data ===> ${error.toString()}");
       emit(SocialUserUpdateErrorState());
@@ -248,7 +254,7 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
         .collection('posts')
         .add(model.toMap())
         .then((value) {
-      getPosts();
+      // getPosts();
       emit(SocialCreatePostSuccessState());
     }).catchError((error) {
       print("Error while update user data ===> ${error.toString()}");
@@ -261,11 +267,11 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
     emit(SocialRemovePostImageState());
   }
 
-  List<PostModel> posts = [];
-  List<String> postsId = [];
-  List<int> likes = [];
-
   void getPosts() {
+    likes = [];
+    posts = [];
+    postsId = [];
+
     FirebaseFirestore.instance
         .collection('posts')
         .orderBy(
@@ -289,9 +295,8 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
     });
   }
 
-  List<String> colorIcons = [];
-
   void getLike(String postId) {
+    colorIcons = [];
     emit(SocialGetLikeLoadingState());
     FirebaseFirestore.instance
         .collection('posts')
@@ -307,7 +312,7 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
       }
       emit(SocialGetLikeSuccessState());
     }).catchError((error) {
-      print(error.toString());
+      print("Error in get Like ====> ${error.toString()}");
       emit(SocialGetLikeErrorState());
     });
   }
@@ -330,6 +335,8 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
         disLikePost(postsId[index], index);
       }
       // getLikes(index);
+    }).catchError((error) {
+      print("Error in CheckLike ====> ${error.toString()}");
     });
   }
 
@@ -345,6 +352,7 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
       print(colorIcons);
       emit(SocialLikePostSuccessState());
     }).catchError((error) {
+      print("Error In LikePost ====> ${error.toString()}");
       emit(SocialLikePostErrorState());
     });
   }
@@ -362,7 +370,7 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
       print(colorIcons);
       emit(SocialDisLikePostSuccessState());
     }).catchError((error) {
-      print(error.toString());
+      print("Error in DisLike ====> ${error.toString()}");
       emit(SocialDisLikePostErrorState());
     });
   }
@@ -378,87 +386,136 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
         .add(commentModel.toMap())
         .then((value) {
       print(value.id);
-      getAllComment();
-
+      // emit(SocialAddCommentSuccessState());
+      getAllComment(true);
     }).catchError((error) {
-      print(error.toString());
+      print("Error in Add Comment =====> ${error.toString()}");
       emit(SocialAddCommentErrorState());
     });
   }
 
-  List<String>? commentId;
-  List<List<CommentModel>> comments = [];
-
-  void getAllComment() {
-    emit(SocialGetCommentsLoadingState());
+  void getAllComment(bool addComment) {
+    comments = [];
+    if (addComment == false) {
+      emit(SocialGetCommentsLoadingState());
+    }
     List<CommentModel> singleComment = [];
-    FirebaseFirestore.instance.collection('posts').get().then((value) {
+    FirebaseFirestore.instance
+        .collection('posts')
+        .orderBy('dateTime', descending: true)
+        .get()
+        .then((value) {
       value.docs.forEach((element) {
-        element.reference.collection('comments').get().then((value) {
+        element.reference
+            .collection('comments')
+            .orderBy('date', descending: true)
+            .get()
+            .then((value) {
           value.docs.forEach((element) {
             singleComment.add(CommentModel.fromJson(element.data()));
           });
           comments.add(singleComment);
           singleComment = [];
+          emit(SocialGetCommentsSuccessState());
         });
       });
-      emit(SocialGetCommentsSuccessState());
     }).catchError((error) {
-      print(error.toString());
+      print("Error in GetAllComments ====> ${error.toString()}");
       emit(SocialGetCommentsErrorState());
     });
   }
 
-//   void getComments({
-//   required String postId,
-// }) {
-//     comments = [];
-//     commentId = [];
-//     emit(SocialGetCommentsLoadingState());
-//     FirebaseFirestore.instance
-//     .collection('posts')
-//     .doc(postId)
-//     .collection('comments')
-//     .orderBy('date', descending: true)
-//     .get()
-//     .then((value){
-//       for(int i=0; i<value.docs.length; i++){
-//         print('start');
-//         // List<CommentModel> singleComment = [];
-//         // singleComment.add(CommentModel.fromJson(value.docs[i].data()));
-//         print(value.docs[i].data());
-//         // commentId!.add(value.docs[i].id);
-//         // comments.add(CommentModel.fromJson(value.docs[i].data()));
-//         print("INSIDE");
-//       }
-//       print("OUTSIDE");
-//       emit(SocialGetCommentsSuccessState());
-//     }).catchError((error){
-//       print(error.toString());
-//       emit(SocialGetCommentsErrorState());
-//     });
-//     ////////
-//     // FirebaseFirestore.instance
-//     //     .collection('posts').get().then((value) {
-//     //   value.docs.forEach((element) {
-//     //     element.reference.collection('comments').get().then((value) {
-//     //       commentNumber.add(value.docs.length);
-//     //     });
-//     //     emit(SocialGetCommentsSuccessState());
-//     //   });
-//     // }).catchError((error) {
-//     //   print(error.toString());
-//     //   emit(SocialGetCommentsErrorState());
-//     // });
-//     ////////////////
-//     //     .doc(postsId[index])
-//     //     .collection('comments')
-//     //     .get()
-//     //     .then((value) {
-//     //       value.docs.forEach((element) {
-//     //         print(element.id);
-//     //       });
-//     //   // commentsLength = value.docs.length;
-//     // }
-//   }
+  void getAllUsers() {
+    users = [];
+    FirebaseFirestore.instance.collection('users').get().then((value) {
+      value.docs.forEach((element) {
+        if (element.data()['uId'] != userModel!.uId) {
+          users.add(SocialUserModel.fromJson(element.data()));
+        }
+        print(element.data());
+      });
+      emit(SocialGetAllUserDataSuccessState());
+    }).catchError((error) {
+      print("Error in GetAllUsers ====> ${error.toString()}");
+      emit(SocialGetAllUserDataErrorState());
+    });
+  }
+
+  void sendMessage({
+    required String receiverId,
+    required String text,
+    required String dateTime,
+  }) {
+    MessageModel messageModel = MessageModel(
+        senderId: userModel!.uId,
+        text: text,
+        dateTime: dateTime,
+        receiverId: receiverId);
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(userModel!.uId)
+        .collection('chats')
+        .doc(receiverId)
+        .collection('messages')
+        .add(messageModel.toMap())
+        .then((value) {
+      emit(SocialSendMessagesSuccessState());
+    }).catchError((error) {
+      print("Error from sendMessage ====> ${error.toString()}");
+      emit(SocialSendMessagesErrorState());
+    });
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(receiverId)
+        .collection('chats')
+        .doc(userModel!.uId)
+        .collection('messages')
+        .add(messageModel.toMap())
+        .then((value) {
+      emit(SocialSendMessagesSuccessState());
+    }).catchError((error) {
+      print("Error from sendMessage ====> ${error.toString()}");
+      emit(SocialSendMessagesErrorState());
+    });
+  }
+
+  void getMessages({required String receiverId}) {
+    emit(SocialGetMessagesLoadingState());
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(userModel!.uId)
+        .collection('chats')
+        .doc(receiverId)
+        .collection('messages')
+        .orderBy('dateTime')
+        .snapshots()
+        .listen((event) {
+      messages = [];
+      print("FROM GET");
+      for (var element in event.docs) {
+        print(element.data());
+        messages.add(MessageModel.fromJson(element.data()));
+      }
+      print("AFTER GET");
+      emit(SocialGetMessagesSuccessState());
+    });
+  }
+
+  void getAllMessages({required String receiverId}) {
+    emit(SocialGetMessagesLoadingState());
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(userModel!.uId)
+        .collection('chats')
+        .doc(receiverId)
+        .collection('messages')
+        .get()
+        .then((value) {
+      print("WTF");
+      value.docs.forEach((element) {
+        print("element.id ====> ${element.id}");
+      });
+    });
+  }
 }
