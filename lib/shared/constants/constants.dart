@@ -8,6 +8,7 @@ import 'package:social_application4/models/Social_User_Model.dart';
 dynamic uId = "";
 SocialUserModel? userModel;
 List<List<CommentModel>> comments = [];
+List<int> commentsNumber = [];
 List<String> colorIcons = [];
 List<PostModel> posts = [];
 List<String> postsId = [];

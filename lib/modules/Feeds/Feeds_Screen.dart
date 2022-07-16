@@ -1,10 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/physics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_application4/models/PostModel.dart';
-import 'package:social_application4/modules/CommentScreen/CommentItem.dart';
 import 'package:social_application4/modules/CommentScreen/CommentScreen.dart';
 import 'package:social_application4/modules/CommentScreen/CommentTextField.dart';
 import 'package:social_application4/modules/Feeds/LikeButton.dart';
@@ -23,7 +19,7 @@ class FeedsScreen extends StatefulWidget {
 class _FeedsScreenState extends State<FeedsScreen> {
 
   void initState(){
-    SocialLayoutCubit.get(context).getAllComment(false);
+    // SocialLayoutCubit.get(context).getAllComment(false);
     // SocialLayoutCubit.get(context).getPosts();
     // SocialLayoutCubit.get(context).getUserData();
   }
@@ -34,12 +30,7 @@ class _FeedsScreenState extends State<FeedsScreen> {
 
       },
       builder: (context, state) {
-        if (posts.isEmpty ||
-            userModel == null ||
-            colorIcons.isEmpty ||
-            likes.isEmpty||
-            comments.isEmpty
-        ) {
+        if (state is SocialLayoutGetPostDataLoadingState || userModel == null) {
           return const Center(child: CircularProgressIndicator());
         } else {
           return SingleChildScrollView(
@@ -283,7 +274,7 @@ class _FeedsScreenState extends State<FeedsScreen> {
                               width: 5.0,
                             ),
                             Text(
-                              (state is SocialAddCommentLoadingState) ? "loading" : "${comments[index].length} comments",
+                              (state is SocialAddCommentLoadingState) ? "loading" : "${commentsNumber[index]} comments",
                               style: Theme.of(context).textTheme.caption,
                             )
                           ],

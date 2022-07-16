@@ -22,12 +22,10 @@ class _CommentScreenState extends State<CommentScreen> {
   @override
   Widget build(BuildContext context) {
     var commentController = TextEditingController();
-    print("index ${widget.index}");
-    print(comments[widget.index].length);
     return BlocConsumer<SocialLayoutCubit, SocialLayoutStates>(
       listener: (context, state) {
         if (state is SocialAddCommentSuccessState) {
-          SocialLayoutCubit.get(context).getAllComment(true);
+          // SocialLayoutCubit.get(context).getAllComment(true);
         }
       },
       builder: (context, state) {

@@ -268,9 +268,11 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
   }
 
   void getPosts() {
+    emit(SocialLayoutGetPostDataLoadingState());
     likes = [];
     posts = [];
     postsId = [];
+    comments = [];
 
     FirebaseFirestore.instance
         .collection('posts')
@@ -280,16 +282,62 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
         )
         .get()
         .then((gotPosts) {
-      gotPosts.docs.forEach((postDocs) {
+      for (var postDocs in gotPosts.docs) {
         postDocs.reference.collection('likes').get().then((likeDocs) {
-          getLike(postDocs.id);
-          likes.add(likeDocs.docs.length);
-          postsId.add(postDocs.id);
-          posts.add(PostModel.fromJson(postDocs.data()));
-          posts.sort((a, b) => a.dateTime!.compareTo(b.dateTime!));
-          emit(SocialLayoutGetPostDataSuccessState());
+          postDocs.reference.collection('comments').get().then((commentDocs) {
+            List<CommentModel> singleComment = [];
+            for (var element in commentDocs.docs) {
+              singleComment.add(CommentModel.fromJson(element.data()));
+            }
+            commentsNumber.add(singleComment.length);
+            comments.add(singleComment);
+            singleComment = [];
+///////////////////////
+            likes.add(likeDocs.docs.length);
+            bool found = false;
+            for (var element in likeDocs.docs) {
+              if (userModel!.uId == element.id) {
+                colorIcons.add('red');
+                found = true;
+              }
+              if (found == true) {
+                break;
+              }
+            }
+            if (found == false) {
+              colorIcons.add('grey');
+            }
+/////////////////
+            // getLike(postDocs.id);
+            /////////////////////////////////////////////////
+            // FirebaseFirestore.instance
+            //     .collection('posts')
+            //     .doc(postId)
+            //     .collection('likes')
+            //     .doc(userModel!.uId)
+            //     .get()
+            //     .then((value) {
+            //   if (value.data() != null) {
+            //     colorIcons.add('red');
+            //   } else {
+            //     colorIcons.add('grey');
+            //   }
+            //   emit(SocialGetLikeSuccessState());
+            // }).catchError((error) {
+            //   print("Error in get Like ====> ${error.toString()}");
+            //   emit(SocialGetLikeErrorState());
+            // })
+            ///////////////////////////////////////////
+            // likes.add(likeDocs.docs.length);
+            postsId.add(postDocs.id);
+            posts.add(PostModel.fromJson(postDocs.data()));
+            // posts.sort((a, b) => a.dateTime!.compareTo(b.dateTime!));
+            if (posts.length == gotPosts.size) {
+              emit(SocialLayoutGetPostDataSuccessState());
+            }
+          });
         }).catchError((error) {});
-      });
+      }
     }).catchError((error) {
       emit(SocialLayoutGetPostDataErrorState(error.toString()));
     });
@@ -387,53 +435,49 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
         .then((value) {
       print(value.id);
       // emit(SocialAddCommentSuccessState());
-      getAllComment(true);
+      // getAllComment(true);
     }).catchError((error) {
       print("Error in Add Comment =====> ${error.toString()}");
       emit(SocialAddCommentErrorState());
     });
   }
 
-  void getAllComment(bool addComment) {
-    comments = [];
-    if (addComment == false) {
-      emit(SocialGetCommentsLoadingState());
-    }
-    List<CommentModel> singleComment = [];
-    FirebaseFirestore.instance
-        .collection('posts')
-        .orderBy('dateTime', descending: true)
-        .get()
-        .then((value) {
-      value.docs.forEach((element) {
-        element.reference
-            .collection('comments')
-            .orderBy('date', descending: true)
-            .get()
-            .then((value) {
-          value.docs.forEach((element) {
-            singleComment.add(CommentModel.fromJson(element.data()));
-          });
-          comments.add(singleComment);
-          singleComment = [];
-          emit(SocialGetCommentsSuccessState());
-        });
-      });
-    }).catchError((error) {
-      print("Error in GetAllComments ====> ${error.toString()}");
-      emit(SocialGetCommentsErrorState());
-    });
-  }
+  // void getAllComment(bool addComment) {
+  //   comments = [];
+  //   if (addComment == false) {
+  //     emit(SocialGetCommentsLoadingState());
+  //   }
+  //   List<CommentModel> singleComment = [];
+  //   FirebaseFirestore.instance.collection('posts').get().then((value) {
+  //     for (var element in value.docs) {
+  //       element.reference
+  //           .collection('comments')
+  //           .orderBy('date', descending: true)
+  //           .get()
+  //           .then((value) {
+  //         for (var element in value.docs) {
+  //           singleComment.add(CommentModel.fromJson(element.data()));
+  //         }
+  //         comments.add(singleComment);
+  //         singleComment = [];
+  //         emit(SocialGetCommentsSuccessState());
+  //       });
+  //     }
+  //   }).catchError((error) {
+  //     print("Error in GetAllComments ====> ${error.toString()}");
+  //     emit(SocialGetCommentsErrorState());
+  //   });
+  // }
 
   void getAllUsers() {
     users = [];
     FirebaseFirestore.instance.collection('users').get().then((value) {
-      value.docs.forEach((element) {
+      for (var element in value.docs) {
         if (element.data()['uId'] != userModel!.uId) {
           users.add(SocialUserModel.fromJson(element.data()));
         }
         print(element.data());
-      });
+      }
       emit(SocialGetAllUserDataSuccessState());
     }).catchError((error) {
       print("Error in GetAllUsers ====> ${error.toString()}");
@@ -513,9 +557,9 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
         .get()
         .then((value) {
       print("WTF");
-      value.docs.forEach((element) {
+      for (var element in value.docs) {
         print("element.id ====> ${element.id}");
-      });
+      }
     });
   }
 }

@@ -15,7 +15,7 @@ class SocialLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => SocialLayoutCubit()..getAllComment(false)..getUserData()..getPosts(),
+      create: (BuildContext context) => SocialLayoutCubit()/*..getAllComment(false)*/..getUserData()..getPosts(),
       child: BlocConsumer<SocialLayoutCubit, SocialLayoutStates>(
         listener: (context, state) {
           if(state is SocialNewPostState){
@@ -30,8 +30,8 @@ class SocialLayout extends StatelessWidget {
                 cubit.titles[cubit.currentIndex]
               ),
               actions: [
-                IconButton(onPressed: (){}, icon: Icon(IconBroken.Notification)),
-                IconButton(onPressed: (){}, icon: Icon(IconBroken.Search)),
+                IconButton(onPressed: (){print(commentsNumber);}, icon: const Icon(IconBroken.Notification)),
+                IconButton(onPressed: (){}, icon: const Icon(IconBroken.Search)),
 
               ],
             ),
@@ -40,7 +40,7 @@ class SocialLayout extends StatelessWidget {
                 cubit.changeBotNavBar(index);
               },
               currentIndex: cubit.currentIndex,
-              items: [
+              items: const [
                 BottomNavigationBarItem(icon: Icon(IconBroken.Home),label: "Home"),
                 BottomNavigationBarItem(icon: Icon(IconBroken.Chat),label: "Chat"),
                 BottomNavigationBarItem(icon: Icon(IconBroken.Paper_Upload),label: "Post"),
