@@ -26,7 +26,7 @@ class SocialLoginScreen extends StatelessWidget {
             showToast(msg: "Login Done Successfully");
             CacheHelper.saveData(key: 'uId', value: state.uid).then((value){
               uId = CacheHelper.getData(key: 'uId');
-              navigateAndFinish(context: context, widget: SocialLayout());
+              navigateAndFinish(context: context, widget: Home());
             });
           }
         },

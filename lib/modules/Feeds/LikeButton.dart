@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_application4/modules/Social_Layout/cubit/cubit.dart';
-import 'package:social_application4/modules/Social_Layout/cubit/states.dart';
+
 import 'package:social_application4/styles/icons_broken.dart';
 
 class LikeButton extends StatelessWidget {

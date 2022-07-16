@@ -25,7 +25,7 @@ class SocialRegisterScreen extends StatelessWidget {
             showToast(msg: "Created Successfully");
             CacheHelper.saveData(key: 'uId', value: state.uId);
             uId = CacheHelper.getData(key: 'uId');
-            navigateAndFinish(context: context, widget: SocialLayout());
+            navigateAndFinish(context: context, widget: Home());
           }else if(state is SocialRegisterErrorState){
             showToast(msg: state.error.toString());
           }

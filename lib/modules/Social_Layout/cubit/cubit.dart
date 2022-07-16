@@ -59,9 +59,7 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
   void getUserData() {
     emit(SocialLayoutGetUserDataLoadingState());
     FirebaseFirestore.instance.collection("users").doc(uId).get().then((value) {
-      print("From Method Data is: ${value.data()}");
       userModel = SocialUserModel.fromJson(value.data()!);
-
       emit(SocialLayoutGetUserDataSuccessState());
     }).catchError((error) {
       print("Error ===> ${error.toString()}");
@@ -190,7 +188,7 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
         .update(model.toMap())
         .then((value) {
       getUserData();
-      navigateAndFinish(context: context, widget: SocialLayout());
+      navigateAndFinish(context: context, widget: Home());
     }).catchError((error) {
       print("Error while update user data ===> ${error.toString()}");
       emit(SocialUserUpdateErrorState());
@@ -254,7 +252,7 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
         .collection('posts')
         .add(model.toMap())
         .then((value) {
-      // getPosts();
+          getPosts();
       emit(SocialCreatePostSuccessState());
     }).catchError((error) {
       print("Error while update user data ===> ${error.toString()}");
@@ -268,11 +266,13 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
   }
 
   void getPosts() {
+    print("GET POSTS");
     emit(SocialLayoutGetPostDataLoadingState());
     likes = [];
     posts = [];
     postsId = [];
-    comments = [];
+    commentsNumber = [];
+    colorIcons = [];
 
     FirebaseFirestore.instance
         .collection('posts')
@@ -290,7 +290,7 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
               singleComment.add(CommentModel.fromJson(element.data()));
             }
             commentsNumber.add(singleComment.length);
-            comments.add(singleComment);
+            // comments.add(singleComment);
             singleComment = [];
 ///////////////////////
             likes.add(likeDocs.docs.length);
@@ -374,12 +374,8 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
         .get()
         .then((value) {
       if (value.data() == null) {
-        print('ADD');
-        print(likes[index]);
         likePost(postsId[index], index);
       } else {
-        print('remove add');
-        print(likes[index]);
         disLikePost(postsId[index], index);
       }
       // getLikes(index);
@@ -397,7 +393,6 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
         .set({'like': true}).then((value) {
       likes[index]++;
       colorIcons[index] = "red";
-      print(colorIcons);
       emit(SocialLikePostSuccessState());
     }).catchError((error) {
       print("Error In LikePost ====> ${error.toString()}");
@@ -415,7 +410,6 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
         .then((value) {
       likes[index]--;
       colorIcons[index] = 'grey';
-      print(colorIcons);
       emit(SocialDisLikePostSuccessState());
     }).catchError((error) {
       print("Error in DisLike ====> ${error.toString()}");
@@ -423,7 +417,10 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
     });
   }
 
-  void addComment(text, index) {
+  void addComment({
+    required String text,required int index,required String postId, bool fromOutside = false
+}) {
+    print("FROM ADD COMMENTS");
     emit(SocialAddCommentLoadingState());
     CommentModel commentModel = CommentModel(text, userModel!.image,
         userModel!.uId, userModel!.name, DateTime.now().toString());
@@ -433,22 +430,46 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
         .collection('comments')
         .add(commentModel.toMap())
         .then((value) {
-      print(value.id);
-      // emit(SocialAddCommentSuccessState());
-      // getAllComment(true);
+      if(fromOutside == false){
+        getPostComments(postId: postId);
+      }
+      commentsNumber[index]++;
+      if(fromOutside == true){
+        emit(SocialAddCommentSuccessState());
+      }
     }).catchError((error) {
       print("Error in Add Comment =====> ${error.toString()}");
       emit(SocialAddCommentErrorState());
     });
   }
 
-  // void getAllComment(bool addComment) {
+
+  void getPostComments({
+  required String postId
+}){
+    postComments = [];
+    emit(SocialGetCommentsLoadingState());
+    FirebaseFirestore.instance.collection('posts').doc(postId).collection('comments').orderBy('date', descending: true).get().then((value){
+      value.docs.forEach((element){
+        postComments.add(CommentModel.fromJson(element.data()));
+      });
+      emit(SocialGetCommentsSuccessState());
+    }).catchError((error){
+      emit(SocialGetCommentsErrorState());
+    });
+  }
+  // void getAllComment() {
+  //   print("FROM GET ALL COMMENTS");
   //   comments = [];
-  //   if (addComment == false) {
-  //     emit(SocialGetCommentsLoadingState());
-  //   }
   //   List<CommentModel> singleComment = [];
-  //   FirebaseFirestore.instance.collection('posts').get().then((value) {
+  //   FirebaseFirestore.instance
+  //       .collection('posts')
+  //       .orderBy(
+  //         'dateTime',
+  //         descending: true,
+  //       )
+  //       .get()
+  //       .then((value) {
   //     for (var element in value.docs) {
   //       element.reference
   //           .collection('comments')
@@ -460,7 +481,6 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
   //         }
   //         comments.add(singleComment);
   //         singleComment = [];
-  //         emit(SocialGetCommentsSuccessState());
   //       });
   //     }
   //   }).catchError((error) {
@@ -476,7 +496,6 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
         if (element.data()['uId'] != userModel!.uId) {
           users.add(SocialUserModel.fromJson(element.data()));
         }
-        print(element.data());
       }
       emit(SocialGetAllUserDataSuccessState());
     }).catchError((error) {

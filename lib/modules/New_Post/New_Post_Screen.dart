@@ -8,19 +8,19 @@ import 'package:social_application4/modules/Social_Layout/cubit/states.dart';
 import 'package:social_application4/shared/components/components.dart';
 import 'package:social_application4/shared/constants/constants.dart';
 import 'package:social_application4/styles/icons_broken.dart';
-import 'package:social_application4/styles/themes.dart';
 
 class NewPostScreen extends StatelessWidget {
   var postController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    print("HEY");
     return BlocConsumer<SocialLayoutCubit, SocialLayoutStates>(
       listener: (context, state) {
         if (state is SocialCreatePostSuccessState) {
           postController.text = "";
           SocialLayoutCubit.get(context).postImage = null;
-          navigateAndFinish(context: context, widget: SocialLayout());
+          navigateAndFinish(context: context, widget: Home());
         }
       },
       builder: (context, state) {
