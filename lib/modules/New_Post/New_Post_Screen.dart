@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_application4/models/PostModel.dart';
 import 'package:social_application4/modules/Feeds/Feeds_Screen.dart';
-import 'package:social_application4/modules/Social_Layout/Social_Layout.dart';
+import 'package:social_application4/modules/Social_Layout/Home.dart';
 import 'package:social_application4/modules/Social_Layout/cubit/cubit.dart';
 import 'package:social_application4/modules/Social_Layout/cubit/states.dart';
 import 'package:social_application4/shared/components/components.dart';

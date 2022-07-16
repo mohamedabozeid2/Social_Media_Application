@@ -13,7 +13,7 @@ import 'package:social_application4/modules/EditProfile/Edit_Profile_Screen.dart
 import 'package:social_application4/modules/Feeds/Feeds_Screen.dart';
 import 'package:social_application4/modules/New_Post/New_Post_Screen.dart';
 import 'package:social_application4/modules/Settings/Settings_Screen.dart';
-import 'package:social_application4/modules/Social_Layout/Social_Layout.dart';
+import 'package:social_application4/modules/Social_Layout/Home.dart';
 import 'package:social_application4/modules/Social_Layout/cubit/states.dart';
 import 'package:social_application4/modules/Users/UsersScreen.dart';
 import 'package:social_application4/modules/login_screen/login_screen.dart';

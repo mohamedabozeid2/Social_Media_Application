@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_application4/modules/Social_Layout/Social_Layout2.dart';
+import 'package:social_application4/modules/Social_Layout/Social_Layout.dart';
 import 'package:social_application4/modules/Social_Layout/cubit/cubit.dart';
 import 'package:social_application4/shared/bloc_observer/bloc_observer.dart';
 import 'package:social_application4/shared/constants/constants.dart';
