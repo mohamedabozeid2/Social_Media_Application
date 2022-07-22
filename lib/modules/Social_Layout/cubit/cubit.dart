@@ -223,8 +223,6 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
       value.ref.getDownloadURL().then((value) {
         createPost(dateTime: dateTime, text: text, postImage: value);
         postImage = null;
-        emit(SocialCreatePostSuccessState());
-        print(value);
       }).catchError((error) {
         emit(SocialCreatePostErrorState());
       });
@@ -233,6 +231,7 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
       print("Error while upload Cover image ===> ${error.toString()}");
     });
   }
+
 
   void createPost({
     required String dateTime,
@@ -252,7 +251,7 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
         .collection('posts')
         .add(model.toMap())
         .then((value) {
-          getPosts();
+      getPosts();
       emit(SocialCreatePostSuccessState());
     }).catchError((error) {
       print("Error while update user data ===> ${error.toString()}");
@@ -417,24 +416,86 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
     });
   }
 
-  void addComment({
-    required String text,required int index,required String postId, bool fromOutside = false
-}) {
-    print("FROM ADD COMMENTS");
+  File? commentImage;
+  var commentPicker = ImagePicker();
+
+  Future<void> getCommentImage() async {
+    final pickedFile =
+        await commentPicker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      commentImage = File(pickedFile.path);
+      print(pickedFile.path);
+      emit(SocialCommentImagePickedSuccessState());
+    } else {
+      print("No image selected");
+      emit(SocialCommentImagePickedErrorState());
+    }
+  }
+
+  void removeCommentImage() {
+    commentImage = null;
+    emit(SocialRemoveCommentImageState());
+  }
+
+
+  void uploadCommentImage({
+  required String text,
+    required int index,
+    required String postId,
+}){
     emit(SocialAddCommentLoadingState());
-    CommentModel commentModel = CommentModel(text, userModel!.image,
-        userModel!.uId, userModel!.name, DateTime.now().toString());
+    firebase_storage.FirebaseStorage.instance
+        .ref()
+        .child('comments/${Uri.file(commentImage!.path).pathSegments.last}').putFile(commentImage!).then((p0){
+      p0.ref.getDownloadURL().then((url){
+        addComment(text: text, index: index, postId: postId, imageInComment: url);
+        removeCommentImage();
+      });
+    });
+  }
+
+
+  void addComment(
+      {required String text,
+      required int index,
+      required String postId,
+      String? imageInComment,
+      bool fromOutside = false}) {
+    print("FROM ADD COMMENTS");
+    if(commentImage == null){
+      emit(SocialAddCommentLoadingState());
+    }
+    CommentModel commentModel = CommentModel(
+        image: imageInComment ?? "",
+        comment: text,
+        profileImage: userModel!.image,
+        userId: userModel!.uId,
+        name: userModel!.name,
+        date: DateTime.now().toString());
     FirebaseFirestore.instance
         .collection('posts')
         .doc(postsId[index])
         .collection('comments')
         .add(commentModel.toMap())
         .then((value) {
-      if(fromOutside == false){
+      ///////////
+      // if(commentImage != null){
+      //   firebase_storage.FirebaseStorage.instance
+      //       .ref()
+      //       .child('comments/${Uri.file(commentImage!.path).pathSegments.last}').putFile(commentImage!).then((p0){
+      //     p0.ref.getDownloadURL().then((url){
+      //       print("HERE INSIDEEEEE");
+      //       print(url);
+      //       removeCommentImage();
+      //     });
+      //   });
+      // }
+      ////////////
+      if (fromOutside == false) {
         getPostComments(postId: postId);
       }
       commentsNumber[index]++;
-      if(fromOutside == true){
+      if (fromOutside == true) {
         emit(SocialAddCommentSuccessState());
       }
     }).catchError((error) {
@@ -443,21 +504,27 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
     });
   }
 
-
-  void getPostComments({
-  required String postId
-}){
+  void getPostComments({required String postId}) {
     postComments = [];
     emit(SocialGetCommentsLoadingState());
-    FirebaseFirestore.instance.collection('posts').doc(postId).collection('comments').orderBy('date', descending: true).get().then((value){
-      value.docs.forEach((element){
+    FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .collection('comments')
+        .orderBy('date', descending: true)
+        .get()
+        .then((value) {
+          print("FROM GET COMMENTS");
+      value.docs.forEach((element) {
         postComments.add(CommentModel.fromJson(element.data()));
       });
       emit(SocialGetCommentsSuccessState());
-    }).catchError((error){
+    }).catchError((error) {
+      print("ERROR FROM GET COMMENTS ${error.toString()}");
       emit(SocialGetCommentsErrorState());
     });
   }
+
   // void getAllComment() {
   //   print("FROM GET ALL COMMENTS");
   //   comments = [];

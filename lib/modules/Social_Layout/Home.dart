@@ -46,6 +46,23 @@ class Home extends StatelessWidget {
             ],
           ),
           body: cubit.screens[cubit.currentIndex],
+          // body: NestedScrollView(
+          //   floatHeaderSlivers: true,
+          //   headerSliverBuilder: (context, innerBoxIsScroller){
+          //     return [
+          //       SliverAppBar(
+          //       floating: true,
+          //       // snap: true,
+          //       expandedHeight: 240,
+          //       flexibleSpace: FlexibleSpaceBar(
+          //         background: Image.network(userModel!.image!, fit: BoxFit.cover,alignment: Alignment.topCenter),
+          //         title: Text(cubit.titles[cubit.currentIndex]),
+          //       ),
+          //     )];
+          //   },
+          //     body: cubit.screens[cubit.currentIndex],
+          //
+          // ),
         );
       },
     );

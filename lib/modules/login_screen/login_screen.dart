@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_application4/modules/Register_Screen/Register_Screen.dart';
 import 'package:social_application4/modules/Social_Layout/Home.dart';
+import 'package:social_application4/modules/Social_Layout/Social_Layout.dart';
+import 'package:social_application4/modules/Social_Layout/cubit/cubit.dart';
 import 'package:social_application4/modules/login_screen/cubit/cubit.dart';
 import 'package:social_application4/modules/login_screen/cubit/states.dart';
 import 'package:social_application4/shared/components/components.dart';
@@ -26,7 +28,7 @@ class SocialLoginScreen extends StatelessWidget {
             showToast(msg: "Login Done Successfully");
             CacheHelper.saveData(key: 'uId', value: state.uid).then((value){
               uId = CacheHelper.getData(key: 'uId');
-              navigateAndFinish(context: context, widget: Home());
+              navigateAndFinish(context: context, widget: SocialLayout());
             });
           }
         },
