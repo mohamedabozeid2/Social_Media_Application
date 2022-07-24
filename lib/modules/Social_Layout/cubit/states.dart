@@ -38,6 +38,10 @@ class SocialCreatePostLoadingState extends SocialLayoutStates{}
 class SocialCreatePostSuccessState extends SocialLayoutStates{}
 class SocialCreatePostErrorState extends SocialLayoutStates{}
 
+class SocialDeletePostLoadingState extends SocialLayoutStates{}
+class SocialDeletePostSuccessState extends SocialLayoutStates{}
+class SocialDeletePostErrorState extends SocialLayoutStates{}
+
 class SocialPostImagePickedSuccessState extends SocialLayoutStates{}
 class SocialPostImagePickedErrorState extends SocialLayoutStates{}
 class SocialRemovePostImageState extends SocialLayoutStates{}
@@ -64,6 +68,10 @@ class SocialDisLikePostErrorState extends SocialLayoutStates{}
 class SocialGetLikeLoadingState extends SocialLayoutStates{}
 class SocialGetLikeSuccessState extends SocialLayoutStates{}
 class SocialGetLikeErrorState extends SocialLayoutStates{}
+
+class SocialGetLikeUsersIdLoadingState extends SocialLayoutStates{}
+class SocialGetLikeUsersIdSuccessState extends SocialLayoutStates{}
+class SocialGetLikeUsersIdErrorState extends SocialLayoutStates{}
 
 class SocialAddCommentLoadingState extends SocialLayoutStates{}
 class SocialAddCommentSuccessState extends SocialLayoutStates{}

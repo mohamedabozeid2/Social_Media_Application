@@ -1,4 +1,5 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_application4/modules/Social_Layout/Social_Layout.dart';
@@ -21,12 +22,12 @@ class SocialRegisterScreen extends StatelessWidget {
       create: (BuildContext context) => SocialRegisterCubit(),
       child: BlocConsumer<SocialRegisterCubit, SocialRegisterStates>(
         listener: (context, state) {
-          if(state is SocialCreateUserSuccessState){
+          if (state is SocialCreateUserSuccessState) {
             showToast(msg: "Created Successfully");
             CacheHelper.saveData(key: 'uId', value: state.uId);
             uId = CacheHelper.getData(key: 'uId');
             navigateAndFinish(context: context, widget: SocialLayout());
-          }else if(state is SocialRegisterErrorState){
+          } else if (state is SocialRegisterErrorState) {
             showToast(msg: state.error.toString());
           }
           // if (state is SocialCreateUserSuccessState) {
@@ -51,11 +52,12 @@ class SocialRegisterScreen extends StatelessWidget {
                       children: [
                         Text(
                           "REGISTER",
-                          style: Theme.of(context)
+                          style: Theme
+                              .of(context)
                               .textTheme
                               .headline5!
                               .copyWith(
-                                  fontSize: 40, fontWeight: FontWeight.bold),
+                              fontSize: 40, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(
                           height: 15,
@@ -63,9 +65,13 @@ class SocialRegisterScreen extends StatelessWidget {
                         Text(
                           "Register now to communicate with friends",
                           style:
-                              Theme.of(context).textTheme.bodyText1!.copyWith(
-                                    color: Colors.grey,
-                                  ),
+                          Theme
+                              .of(context)
+                              .textTheme
+                              .bodyText1!
+                              .copyWith(
+                            color: Colors.grey,
+                          ),
                         ),
                         const SizedBox(
                           height: 30.0,
@@ -83,7 +89,14 @@ class SocialRegisterScreen extends StatelessWidget {
                         const SizedBox(
                           height: 15,
                         ),
-                        emailFormField(context, emailController),
+                        textFormField(
+                            type: TextInputType.emailAddress,
+                            controller: emailController,
+                            label: "Email Address",
+                            validation: "Please Enter Your Email Address",
+                            prefixIcon: Icons.email_outlined,
+                            context: context
+                        ),
                         const SizedBox(
                           height: 15.0,
                         ),
@@ -93,8 +106,12 @@ class SocialRegisterScreen extends StatelessWidget {
                           label: "Password",
                           type: TextInputType.visiblePassword,
                           prefixIcon: Icons.lock,
-                          isPassword: SocialRegisterCubit.get(context).isPassword,
-                          suffixIcon: SocialRegisterCubit.get(context).icon,
+                          isPassword: SocialRegisterCubit
+                              .get(context)
+                              .isPassword,
+                          suffixIcon: SocialRegisterCubit
+                              .get(context)
+                              .icon,
                           fun: () {
                             SocialRegisterCubit.get(context).changeVisibility();
                           },
@@ -119,26 +136,28 @@ class SocialRegisterScreen extends StatelessWidget {
                         ),
                         ConditionalBuilder(
                             condition: state is! SocialRegisterLoadingState,
-                            builder: (context) => buttonBuilder(
-                                fun: () {
-                                  if (formKey.currentState!.validate()) {
-                                    SocialRegisterCubit.get(context)
-                                        .userRegister(
+                            builder: (context) =>
+                                buttonBuilder(
+                                    fun: () {
+                                      if (formKey.currentState!.validate()) {
+                                        SocialRegisterCubit.get(context)
+                                            .userRegister(
                                             name: nameController.text,
                                             email: emailController.text,
                                             phone: phoneController.text,
                                             password: passwordController.text,
                                             context: context
-                                    );
-                                  }
-                                },
-                                text: "Register".toUpperCase(),
-                                width: double.infinity,
-                                textColor: Colors.white,
-                                color: Colors.blue,
-                                isUpper: true,
-                                height: 50),
-                            fallback: (context) => const Center(
+                                        );
+                                      }
+                                    },
+                                    text: "Register".toUpperCase(),
+                                    width: double.infinity,
+                                    textColor: Colors.white,
+                                    color: Colors.blue,
+                                    isUpper: true,
+                                    height: 50),
+                            fallback: (context) =>
+                            const Center(
                                 child: CircularProgressIndicator())),
                       ],
                     ),

@@ -3,9 +3,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:social_application4/styles/icons_broken.dart';
 
 
-Widget myDivider({required Color color}) {
+Widget myDivider({required Color color, double paddingVertical = 8.0, double paddingHorizontal = 8.0}) {
   return Padding(
-    padding: const EdgeInsets.all(8.0),
+    padding: EdgeInsets.symmetric(vertical: paddingVertical, horizontal: paddingHorizontal),
     child: Container(
       height: 2,
       color: color,
@@ -30,6 +30,7 @@ void showToast({
 
 }){
   Fluttertoast.showToast(
+
       msg: msg,
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.BOTTOM,

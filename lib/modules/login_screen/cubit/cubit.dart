@@ -38,7 +38,7 @@ class SocialLoginCubit extends Cubit<SocialLoginStates> {
           }
           CacheHelper.saveData(key: 'uId', value: value.user!.uid);
           uId = CacheHelper.getData(key: 'uId');
-      SocialLayoutCubit.get(context).getUserData();
+      SocialLayoutCubit.get(context).getUserData(userID: uId);
       emit(SocialLoginSuccessState(value.user!.uid));
     }).catchError((error) {
       print("Error from Login===> ${error.toString()}");

@@ -17,6 +17,9 @@ List<int> likes = [];
 List<SocialUserModel> users = [];
 List<MessageModel> messages = [];
 List <CommentModel> postComments = [];
+List<String> usersLikesIDs = [];
+List<SocialUserModel> usersOnPostLikes = [];
+
 
 
 String index = "";

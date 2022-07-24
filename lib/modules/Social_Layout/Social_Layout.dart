@@ -5,13 +5,14 @@ import 'package:social_application4/modules/Social_Layout/Home.dart';
 import 'package:social_application4/modules/Social_Layout/cubit/cubit.dart';
 import 'package:social_application4/modules/Social_Layout/cubit/states.dart';
 import 'package:social_application4/shared/components/components.dart';
+import 'package:social_application4/shared/constants/constants.dart';
 
 class SocialLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (BuildContext context) => SocialLayoutCubit()..getUserData()..getPosts(),
+        create: (BuildContext context) => SocialLayoutCubit()..getUserData(userID: uId)..getPosts(),
         child: BlocConsumer<SocialLayoutCubit, SocialLayoutStates>(
           listener: (context, state){
             if(state is SocialNewPostState){

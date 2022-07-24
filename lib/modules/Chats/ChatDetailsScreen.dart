@@ -25,6 +25,8 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final ScrollController _controller = ScrollController();
+
     return Builder(
       builder: (BuildContext context) {
         // SocialLayoutCubit.get(context)
@@ -63,6 +65,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                                 Expanded(
                                   child: messages.isNotEmpty
                                       ? ListView.separated(
+
                                           physics:
                                               const BouncingScrollPhysics(),
                                           itemBuilder: (context, index) {
@@ -84,8 +87,8 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                                           child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
-                                          children: [
-                                            const Text('No Chat'),
+                                          children: const [
+                                            Text('No Chat'),
                                             Icon(IconBroken.Message)
                                           ],
                                         )),

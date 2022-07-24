@@ -69,7 +69,7 @@ class SocialRegisterCubit extends Cubit<SocialRegisterStates> {
         .doc(uId)
         .set(model.toMap())
         .then((value) {
-      SocialLayoutCubit.get(context).getUserData();
+      SocialLayoutCubit.get(context).getUserData(userID: uId);
       emit(SocialCreateUserSuccessState(uId));
     }).catchError((error) {
       print(error.toString());

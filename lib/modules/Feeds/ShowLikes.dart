@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:social_application4/styles/icons_broken.dart';
 
-class LikeButton extends StatelessWidget {
+class ShowLikesButton extends StatelessWidget {
   int index;
   int likesNumber;
   final fun;
@@ -10,12 +10,12 @@ class LikeButton extends StatelessWidget {
 
 
 
-  LikeButton({
+  ShowLikesButton({
     required this.index,
     required this.likesNumber,
     required this.fun,
     required this.colorIcons,
-});
+  });
 
 
   @override
@@ -27,16 +27,16 @@ class LikeButton extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
+              const Icon(
                 IconBroken.Heart,
                 size: 20,
-                color: colorIcons[index] == "red"? Colors.red: Colors.grey,
+                color: Colors.red,
               ),
               const SizedBox(
                 width: 5.0,
               ),
               Text(
-                "Love",
+                "$likesNumber",
                 style: Theme.of(context).textTheme.caption,
               )
             ],
