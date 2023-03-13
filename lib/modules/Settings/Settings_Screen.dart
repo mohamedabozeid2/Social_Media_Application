@@ -10,13 +10,14 @@ import 'package:social_application4/shared/constants/constants.dart';
 import 'package:social_application4/styles/icons_broken.dart';
 
 class SettingsScreen extends StatelessWidget {
+  const SettingsScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SocialLayoutCubit, SocialLayoutStates>(
       listener: (context, state) {},
       builder: (context, state) {
         // var userModel = SocialLayoutCubit.get(context).userModel;
-        print("userModel==> ${userModel!.uId}");
         return ConditionalBuilder(
             condition: userModel != null,
             builder: (context) => Padding(
@@ -27,12 +28,13 @@ class SettingsScreen extends StatelessWidget {
                         hasScrollBody: false,
                         child: Column(
                           children: [
-                            Container(
+                            SizedBox(
                               height: 190,
                               child: Stack(
                                 alignment: Alignment.bottomCenter,
                                 children: [
                                   Align(
+                                    alignment: Alignment.topCenter,
                                     child: Container(
                                       height: 160,
                                       width: double.infinity,
@@ -46,7 +48,6 @@ class SettingsScreen extends StatelessWidget {
                                               image: NetworkImage(
                                                   "${userModel!.cover}"))),
                                     ),
-                                    alignment: Alignment.topCenter,
                                   ),
                                   Container(
                                     decoration: BoxDecoration(
@@ -226,25 +227,15 @@ class SettingsScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                            buttonBuilder(
-                                fun: () {
-                                  debugPrint("Before: $uId");
-                                  SocialLayoutCubit.get(context).signOut(context);
-                                  debugPrint("After $uId");
-                                },
-                                text: "Sign Out"),
-                            buttonBuilder(
-                                fun: () {
-                                  debugPrint("Uid: $uId");
-                                },
-                                text: "uId")
+
+
                           ],
                         ),
                       )
                     ],
                   ),
                 ),
-            fallback: (context) => Center(child: CircularProgressIndicator()));
+            fallback: (context) => const Center(child: CircularProgressIndicator()));
 //           Padding(
 //           padding: const EdgeInsets.all(8.0),
 //           child: Column(

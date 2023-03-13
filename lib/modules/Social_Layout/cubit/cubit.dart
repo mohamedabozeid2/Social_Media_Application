@@ -32,7 +32,7 @@ class SocialLayoutCubit extends Cubit<SocialLayoutStates> {
     ChatsScreen(),
     NewPostScreen(),
     UsersScreen(),
-    SettingsScreen(),
+    const SettingsScreen(),
   ];
 
   List<String> titles = ["Home", "Chats", "Post", "Users", "Settings"];
