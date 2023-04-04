@@ -9,27 +9,26 @@ You can edit your profile and cover pictures or set a new bio in your profile an
 your personal information.
 #
 
-![1](https://user-images.githubusercontent.com/52718382/229700145-10f55a44-d7b0-4aaf-b580-0efa9ffdae3b.jpg)
+![screen_1](https://user-images.githubusercontent.com/52718382/229700498-295549b0-2f37-44c9-aff8-58db3b6a92ba.png)
 
 #
 
-![2](https://user-images.githubusercontent.com/52718382/229700151-83953084-49e2-4053-9a71-fec714a1a4d6.jpg)
+![screen_2](https://user-images.githubusercontent.com/52718382/229700511-b54de87f-fc44-4c0c-85ba-58d08b144327.png)
 
 #
 
-![3](https://user-images.githubusercontent.com/52718382/229700157-33c7b48b-7781-4f1f-ac8e-df84cfed9b58.jpg)
+![screen_3](https://user-images.githubusercontent.com/52718382/229700539-9e19f003-faa3-4a12-876e-29d572f17b4a.png)
 
 #
 
-![4](https://user-images.githubusercontent.com/52718382/229700162-4045d75d-1cc8-4577-bb9e-9af201bf410d.jpg)
-
-
-#
-
-![5](https://user-images.githubusercontent.com/52718382/229700201-54156ee6-f52a-494c-813c-0da7561369b1.jpg)
+![screen_4](https://user-images.githubusercontent.com/52718382/229700546-f589b988-2b69-4e2c-81bb-bd58d56a49f6.png)
 
 #
 
-![6](https://user-images.githubusercontent.com/52718382/229700211-6f79afd1-768a-4749-bcf1-a39251b57c69.jpg)
+![screen_5](https://user-images.githubusercontent.com/52718382/229700555-d4347114-26cd-4885-aba8-c83779caa2a4.png)
+
+#
+
+![screen_6](https://user-images.githubusercontent.com/52718382/229700565-62f31560-1cff-464f-a55d-209b96369d8e.png)
 
 #
