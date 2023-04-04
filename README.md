@@ -7,15 +7,29 @@ The application contains a chat to send and receive messages from friends and
 followers.
 You can edit your profile and cover pictures or set a new bio in your profile and change 
 your personal information.
+#
 
-![Screenshot_2023-03-13-18-28-49-507_com example social_application4](https://user-images.githubusercontent.com/52718382/224769048-762d9e05-3876-42ef-b3bd-330c0de9addd.jpg)
+![1](https://user-images.githubusercontent.com/52718382/229700145-10f55a44-d7b0-4aaf-b580-0efa9ffdae3b.jpg)
+
 #
-![Screenshot_2023-03-13-18-31-28-166_com example social_application4](https://user-images.githubusercontent.com/52718382/224769309-760cde3d-3499-4afc-9fbb-33b8ce250e5c.jpg)
+
+![2](https://user-images.githubusercontent.com/52718382/229700151-83953084-49e2-4053-9a71-fec714a1a4d6.jpg)
+
 #
-![Screenshot_2023-03-13-18-32-03-141_com example social_application4](https://user-images.githubusercontent.com/52718382/224769335-0eb3a2c8-546e-4616-919b-52eb8f7ee452.jpg)
+
+![3](https://user-images.githubusercontent.com/52718382/229700157-33c7b48b-7781-4f1f-ac8e-df84cfed9b58.jpg)
+
 #
-![Screenshot_2023-03-13-18-32-45-908_com example social_application4](https://user-images.githubusercontent.com/52718382/224769358-0bc9112b-5740-40fd-a3f5-2ba9ab15a8bd.jpg)
+
+![4](https://user-images.githubusercontent.com/52718382/229700162-4045d75d-1cc8-4577-bb9e-9af201bf410d.jpg)
+
+
 #
-![Screenshot_2023-03-13-18-40-45-924_com example social_application4](https://user-images.githubusercontent.com/52718382/224769376-6f57eb88-bc3f-4977-8ab8-933d43e2bf10.jpg)
+
+![5](https://user-images.githubusercontent.com/52718382/229700201-54156ee6-f52a-494c-813c-0da7561369b1.jpg)
+
 #
-![Screenshot_2023-03-13-18-40-58-267_com example social_application4](https://user-images.githubusercontent.com/52718382/224769398-db1d14d2-3a7e-4ab2-88fe-380e4320d198.jpg)
+
+![6](https://user-images.githubusercontent.com/52718382/229700211-6f79afd1-768a-4749-bcf1-a39251b57c69.jpg)
+
+#
